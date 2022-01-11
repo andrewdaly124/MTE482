@@ -1,19 +1,21 @@
 ### info
 
-**_Getting Started_**
+**_Building and running the app_**
 
-`test`
+First you need to install node.
 
-**_subheader 2_**
-
-test again
+then `cd` to this directory and run the following commands in order:
 
 ```
-Andrew
+npm i
+npm run electron:build
 ```
 
-oh?
+then navigate to the new `dist` folder and run the setup executable. Done!
+
+**_Debugging_**
 
 ```
-Daly
+npm i
+npm run electron:serve
 ```
