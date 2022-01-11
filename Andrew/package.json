@@ -1,0 +1,11 @@
+{
+  "name": "andrew-app",
+  "version": "1.0.0",
+  "description": "app for mte 482 pedal project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrew Daly",
+  "license": "MIT"
+}
