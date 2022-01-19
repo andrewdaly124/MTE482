@@ -28,6 +28,8 @@ module.exports = {
     "no-plusplus": 0,
     "react/no-array-index-key": 0,
     "default-case": 0,
+    "react/jsx-one-expression-per-line": 0,
+    "react/no-unescaped-entities": 0,
     "jsx-a11y/label-has-associated-control": 0,
     "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }],
   },
