@@ -1,7 +1,7 @@
 import { createReducer } from "typesafe-actions";
 import { setCurrentPageState } from "../actions";
 
-export const PAGE_STATES = { home: 0, bluetooth: 1 }; // indexing from 1 sorry
+export const PAGE_STATES = { home: 0, bluetooth: 1 };
 
 const DEFAULT_STATE = {
   currentPageState: PAGE_STATES.home,

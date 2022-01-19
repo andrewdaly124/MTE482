@@ -1,6 +1,5 @@
-import { setCurrentPageState } from "../store/actions";
-import { PAGE_STATES } from "../store/reducers/pageState";
-
+import { setReduxTestNumber } from "../store/actions";
+import { getReduxTestNumber } from "../store/selectors";
 import store from "../store";
 
 /*
@@ -11,7 +10,9 @@ export function KeyDownHandler(e) {
   // eslint-disable-next-line default-case
   switch (e.key) {
     case "Enter":
-      store.dispatch(setCurrentPageState(PAGE_STATES.home));
+      // eslint-disable-next-line no-case-declarations
+      const reduxTestNumber = getReduxTestNumber(store.getState());
+      store.dispatch(setReduxTestNumber(reduxTestNumber + 1));
       break;
   }
 }
@@ -19,8 +20,10 @@ export function KeyDownHandler(e) {
 export function KeyUpHandler(e) {
   // eslint-disable-next-line default-case
   switch (e.key) {
-    case "ArrowUp":
-      store.dispatch(setCurrentPageState(PAGE_STATES.home));
+    case "Enter":
+      // eslint-disable-next-line no-case-declarations
+      const reduxTestNumber = getReduxTestNumber(store.getState());
+      store.dispatch(setReduxTestNumber(reduxTestNumber + 1000));
       break;
   }
 }
