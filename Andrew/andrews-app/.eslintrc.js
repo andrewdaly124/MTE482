@@ -32,5 +32,6 @@ module.exports = {
     "react/no-unescaped-entities": 0,
     "jsx-a11y/label-has-associated-control": 0,
     "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }],
+    "object-curly-newline": 0,
   },
 };

@@ -16,16 +16,22 @@
   font-family: "Montserrat", sans-serif;
 
   .upperLeftStack {
-    position: fixed;
+    position: absolute;
+    height: calc(100% - 16px);
     left: 0;
     top: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: 8px;
 
-    .mainMenu {
-      // anything?
+    .stack {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      margin-right: 8px;
     }
   }
 }

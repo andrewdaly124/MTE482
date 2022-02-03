@@ -16,6 +16,7 @@ function createWindow() {
       nodeIntegration: true,
       enableRemoteModule: true,
     },
+    titleBarStyle: "hidden",
   });
 
   win.webContents.on(

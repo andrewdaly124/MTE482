@@ -2,6 +2,7 @@ import React from "react";
 import { KeyDownHandler, KeyUpHandler } from "../utils/input_handler";
 
 import MainMenu from "./components/mainMenu";
+import Panel from "./components/panel";
 
 import styles from "./index.module.scss";
 
@@ -14,9 +15,10 @@ export default function Ui() {
   return (
     <div className={styles.ui}>
       <div className={styles.upperLeftStack}>
-        <div className={styles.mainMenu}>
+        <div className={styles.stack}>
           <MainMenu />
         </div>
+        <Panel />
       </div>
     </div>
   );
