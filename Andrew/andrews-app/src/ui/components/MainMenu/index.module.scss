@@ -1,3 +1,5 @@
+@import "../../palette.module.scss";
+
 .mainMenu {
   width: 80px;
   height: auto;
@@ -5,6 +7,9 @@
   align-items: center;
   justify-content: space-around;
   flex-direction: column;
+  background-color: $GREY9;
+  border-radius: 4px;
+  overflow: hidden;
 
   .item {
     width: auto;

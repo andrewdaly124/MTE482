@@ -1,3 +1,5 @@
+@import "./palette.module.scss";
+
 .ui {
   position: fixed;
   padding: 0;
@@ -6,10 +8,24 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: lightgrey;
+  background-color: $GREY10;
   user-select: none;
   display: flex;
-  align-items: center;
-  justify-content: space-around;
-  flex-direction: column;
+
+  color: $PRIMARY;
+  font-family: "Montserrat", sans-serif;
+
+  .upperLeftStack {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    .mainMenu {
+      // anything?
+    }
+  }
 }

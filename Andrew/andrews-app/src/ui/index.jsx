@@ -1,27 +1,23 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { KeyDownHandler, KeyUpHandler } from "../utils/input_handler";
-import { getReduxTestNumber } from "../store/selectors";
-import BTDeviceList from "./components/btDeviceList";
-import SelectFile from "./components/selectFile";
+
+import MainMenu from "./components/mainMenu";
 
 import styles from "./index.module.scss";
-import MainMenu from "./components/MainMenu";
 
 // Root UI component
 export default function Ui() {
   // Initialize input handlers - Nothing rn
   document.addEventListener("keydown", KeyDownHandler);
   document.addEventListener("keyup", KeyUpHandler);
-  const reduxTestNumber = useSelector(getReduxTestNumber);
 
   return (
     <div className={styles.ui}>
-      test
-      <MainMenu />
-      <BTDeviceList />
-      <SelectFile />
-      <label>"{reduxTestNumber}"</label>
+      <div className={styles.upperLeftStack}>
+        <div className={styles.mainMenu}>
+          <MainMenu />
+        </div>
+      </div>
     </div>
   );
 }

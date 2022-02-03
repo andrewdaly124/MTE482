@@ -1,21 +1,48 @@
+@import "../../../palette.module.scss";
+
 .mainMenuItem {
   width: 80px;
   height: 80px;
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  background-color: red;
+  justify-content: center;
+  flex-direction: column;
 
   &.active {
-    background-color: blue;
+    background-color: $GREY7;
+
+    &:hover {
+      background-color: $GREY6;
+    }
+
+    &:active {
+      background-color: $GREY5;
+    }
+  }
+
+  &:not(.active) {
+    &:hover {
+      background-color: $GREY8;
+    }
+
+    &:active {
+      background-color: $GREY7;
+    }
   }
 
   .icon {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 4px;
+
+    svg {
+      width: 30px;
+      height: 30px;
+      color: $GREY1;
+    }
   }
 
   .label {
-    width: 100%;
+    font-size: 12px;
   }
 }
