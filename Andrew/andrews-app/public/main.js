@@ -18,6 +18,16 @@ function createWindow() {
     },
   });
 
+  win.webContents.on(
+    "select-bluetooth-device",
+    (event, deviceList, callback) => {
+      event.preventDefault();
+      if (deviceList && deviceList.length > 0) {
+        callback(deviceList);
+      }
+    }
+  );
+
   win.loadURL(
     isDev
       ? "http://localhost:3000"
