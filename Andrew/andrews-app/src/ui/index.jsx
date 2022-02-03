@@ -6,6 +6,7 @@ import BTDeviceList from "./components/btDeviceList";
 import SelectFile from "./components/selectFile";
 
 import styles from "./index.module.scss";
+import MainMenu from "./components/MainMenu";
 
 // Root UI component
 export default function Ui() {
@@ -17,6 +18,7 @@ export default function Ui() {
   return (
     <div className={styles.ui}>
       test
+      <MainMenu />
       <BTDeviceList />
       <SelectFile />
       <label>"{reduxTestNumber}"</label>
