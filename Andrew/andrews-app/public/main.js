@@ -16,7 +16,8 @@ function createWindow() {
       nodeIntegration: true,
       enableRemoteModule: true,
     },
-    titleBarStyle: "hidden",
+    autoHideMenuBar: true,
+    // titleBarStyle: "hidden", // PLEASE BUILD THIS LATE
   });
 
   win.webContents.on(

@@ -11,6 +11,8 @@ import { ReactComponent as ExportSVG } from "../../assets/export.svg";
 
 import styles from "./index.module.scss";
 
+//const { remote } = require("electron");
+
 // main menu component that has the list of things to do. ATM PLANS:
 // - Home
 // - Page Config
@@ -20,6 +22,7 @@ export default function MainMenu() {
   const currentPageState = useSelector(getCurrentPageState);
 
   function onClickItem(selection) {
+    //remote.BrowserWindow.getFocusedWindow().minimize();
     dispatch(setCurrentPageState(selection));
   }
 
