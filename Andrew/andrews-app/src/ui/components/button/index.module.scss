@@ -1,0 +1,48 @@
+@import "../../palette.module.scss";
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: $GREY7;
+  overflow: hidden;
+
+  &.panelSize {
+    height: 26px;
+    min-width: 26px;
+    border-radius: 8px;
+  }
+
+  &.normal {
+    height: 40px;
+    min-width: 40px;
+  }
+
+  &.large {
+    height: 56px;
+    min-width: 56px;
+  }
+
+  .hoverContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: $HOVERLIGHT;
+    }
+
+    &:active {
+      background-color: $PRESSEDLIGHT;
+    }
+
+    .inner {
+      margin: 0;
+      padding: 0;
+      padding: 4px;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+@import "../../palette.module.scss";
+
+.hoverCover {
+  position: relative;
+
+  .inner {
+    position: absolute;
+    overflow: hidden;
+
+    &:hover {
+      background-color: $HOVERLIGHT;
+    }
+
+    &:active {
+      background-color: $PRESSEDLIGHT;
+    }
+  }
+}

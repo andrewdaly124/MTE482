@@ -34,5 +34,6 @@ module.exports = {
     "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }],
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     "object-curly-newline": 0,
+    "react/forbid-prop-types": 0,
   },
 };

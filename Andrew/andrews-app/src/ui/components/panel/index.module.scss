@@ -10,4 +10,9 @@
   background-color: $GREY9;
   border-radius: 4px;
   overflow: hidden;
+
+  .panelInner {
+    width: calc(100% - 32px);
+    height: calc(100% - 32px);
+  }
 }

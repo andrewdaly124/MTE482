@@ -1,0 +1,13 @@
+.pageScroll {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row; // idk if this is needed techincally
+
+  .scrollbar {
+    background-color: black;
+    margin: 0px 8px;
+    width: 100%;
+  }
+}
