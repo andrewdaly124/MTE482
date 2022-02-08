@@ -11,7 +11,7 @@ export default function HoverCover({ containerRef }) {
 
   // keeps dimension info updated for container
   useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef?.current) {
       setContainerDims(containerRef.current.getBoundingClientRect());
     }
   }, [containerRef]);

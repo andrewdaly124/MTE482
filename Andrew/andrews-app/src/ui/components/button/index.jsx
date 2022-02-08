@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames/bind";
 
@@ -8,33 +8,30 @@ const cx = classNames.bind(styles);
 
 export default function Button({ inner, size, onClick }) {
   const ref = useRef(null);
+  const [sizeStyles, setSizeStyles] = useState({});
 
-  let sizeStyles;
-
-  function selectSize() {
+  useEffect(() => {
     // size styles select
     switch (size) {
       case "pages":
-        sizeStyles = styles.panelSize;
+        setSizeStyles(styles.panelSize);
         break;
       case "normal":
-        sizeStyles = styles.normal;
+        setSizeStyles(styles.normal);
         break;
       case "large":
-        sizeStyles = styles.large;
+        setSizeStyles(styles.large);
         break;
       default:
-        sizeStyles = styles.normal;
+        setSizeStyles(styles.normal);
     }
-    console.log(sizeStyles);
-    return sizeStyles;
-  }
+  }, []);
 
   return (
     <div
       className={cx({
         [styles.button]: true,
-        [selectSize()]: true,
+        [sizeStyles]: true,
       })}
       onClick={onClick}
       ref={ref}
@@ -47,7 +44,7 @@ export default function Button({ inner, size, onClick }) {
 }
 
 Button.propTypes = {
-  inner: PropTypes.string.isRequired,
+  inner: PropTypes.object.isRequired,
   // color: PropTypes.string.isRequired, // oneOf plz
   size: PropTypes.string.isRequired, // oneOf plz
   onClick: PropTypes.func.isRequired,

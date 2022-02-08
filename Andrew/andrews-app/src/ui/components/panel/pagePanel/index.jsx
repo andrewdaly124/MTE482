@@ -8,7 +8,7 @@ import PageScroll from "./pageScroll";
 export default function PagePanel() {
   return (
     <div className={styles.pagePanel}>
-      <div className={styles.title}>Test</div>
+      <div className={styles.title}>Pages</div>
       <div className={styles.scrollbar}>
         <PageScroll />
       </div>
