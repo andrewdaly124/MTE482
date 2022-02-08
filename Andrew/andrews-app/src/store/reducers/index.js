@@ -1,8 +1,9 @@
 import { combineReducers } from "redux";
 
 import reduxTest from "./reduxTest"; // TODO: Hide behind dev mode
-import pageState from "./pageState";
+import appState from "./appState";
+import pages from "./pages";
 
-const reducers = combineReducers({ reduxTest, pageState });
+const reducers = combineReducers({ reduxTest, appState, pages });
 
 export default reducers;

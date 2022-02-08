@@ -1,72 +1,76 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { getCurrentPageNumber } from "../../../../../store/selectors";
+import { setCurrentPageNumber } from "../../../../../store/actions";
 
 import styles from "./index.module.scss";
 
 import { ReactComponent as ChevRightSVG } from "../../../../assets/chevron-right.svg";
 import { ReactComponent as ChevLeftSVG } from "../../../../assets/chevron-left.svg";
 
+import { NUMPAGES } from "../../../../../store/reducers/pages";
+
 import Button from "../../../button";
 
 export default function PageScroll() {
-  const NUMPAGES = 20; // standardize this
   const barRef = useRef(null);
   const [barDims, setBarDims] = useState({});
-  const [handleStyles, setHandleStyles] = useState({
-    transform: "translate(-8px, -8px)",
-  });
-
-  function onMouseMove(e) {
-    function computeHandlePosition() {
-      const stepSize = barDims.width / (NUMPAGES - 1);
-      const ADJUSTMENT = 12;
-
-      const adjustedClientX = e.clientX - ADJUSTMENT;
-
-      let posX = adjustedClientX;
-
-      if (posX < barDims.left - ADJUSTMENT) {
-        posX = barDims.left - ADJUSTMENT;
-      } else if (posX > barDims.right - ADJUSTMENT) {
-        posX = barDims.right - ADJUSTMENT;
-      }
-      console.log(e.clientX, posX);
-      return posX;
-    }
-
-    setHandleStyles({
-      transform: `translate(${computeHandlePosition()}px, -8px)`,
-    });
-  }
-
-  function onPointerUp() {
-    // remove the mousemove event listener
-    window.removeEventListener("mousemove", onMouseMove);
-  }
-
-  function onClickScrollHandle() {
-    // add pointer up handle and add
-    window.addEventListener("pointerup", onPointerUp);
-    window.addEventListener("mousemove", onMouseMove);
-  }
+  const [pageNumberHandleStyle, setPageNumberHandleStyle] = useState({});
+  const dispatch = useDispatch();
+  const currentPageNumber = useSelector(getCurrentPageNumber);
 
   useEffect(() => {
     if (barRef?.current) {
       setBarDims(barRef.current.getBoundingClientRect());
-      console.log(barRef.current.getBoundingClientRect());
     }
   }, [barRef]);
 
+  useEffect(() => {
+    if (barRef?.current) {
+      const THUMBSIZE = 24; // see css
+      const LEFTOFFSET = 3;
+      const RIGHTOFFSET = -7;
+      const left =
+        barDims.left +
+        LEFTOFFSET +
+        ((barDims.width - THUMBSIZE + RIGHTOFFSET) / (NUMPAGES - 1)) *
+          (currentPageNumber - 1);
+      setPageNumberHandleStyle({ left });
+    }
+  }, [barDims, currentPageNumber]);
+
+  function onChangePage(e) {
+    dispatch(setCurrentPageNumber(parseInt(e.target.value, 10)));
+  }
+
   return (
     <div className={styles.pageScroll}>
-      <Button inner={<ChevLeftSVG />} size="pages" onClick={() => {}} />
-      <div className={styles.scrollbar} ref={barRef}>
-        <div
-          className={styles.scrollHandle}
-          style={handleStyles}
-          onPointerDown={onClickScrollHandle}
+      <Button
+        inner={<ChevLeftSVG />}
+        size="pages"
+        onClick={() => {
+          dispatch(setCurrentPageNumber(parseInt(currentPageNumber, 10) - 1));
+        }}
+      />
+      <div className={styles.inputContainer} ref={barRef}>
+        <input
+          type="range"
+          min={1}
+          max={NUMPAGES}
+          onChange={onChangePage}
+          value={currentPageNumber}
         />
+        <div className={styles.pageNumberHandle} style={pageNumberHandleStyle}>
+          {currentPageNumber}
+        </div>
       </div>
-      <Button inner={<ChevRightSVG />} size="pages" onClick={() => {}} />
+      <Button
+        inner={<ChevRightSVG />}
+        size="pages"
+        onClick={() => {
+          dispatch(setCurrentPageNumber(parseInt(currentPageNumber, 10) + 1));
+        }}
+      />
     </div>
   );
 }
