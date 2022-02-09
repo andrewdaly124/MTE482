@@ -1,11 +1,15 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import classNames from "classnames/bind";
+
 import { getCurrentAppState } from "../../../store/selectors";
 
 import styles from "./index.module.scss";
 import PagePanel from "./pagePanel";
 import HomePanel from "./homePanel";
 import DeployPanel from "./deployPanel";
+
+const cx = classNames.bind(styles);
 
 // main panel wrapper
 export default function Panel() {
@@ -49,7 +53,6 @@ export default function Panel() {
       width: `${panelDims.width}px`,
       height: `${panelDims.height}px`,
     });
-    console.log("sad");
   }, [panelDims]);
 
   return (
@@ -58,7 +61,12 @@ export default function Panel() {
         <div className={styles.panelInner}>
           <HomePanel />
         </div>
-        <div className={styles.panelInner}>
+        <div
+          className={cx({
+            [styles.panelInner]: true,
+            [styles.pages]: true,
+          })}
+        >
           <PagePanel />
         </div>
         <div className={styles.panelInner}>

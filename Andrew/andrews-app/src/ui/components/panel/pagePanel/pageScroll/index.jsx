@@ -19,11 +19,34 @@ export default function PageScroll() {
   const dispatch = useDispatch();
   const currentPageNumber = useSelector(getCurrentPageNumber);
 
+  function updateBarDims(node) {
+    setBarDims(node.getBoundingClientRect());
+  }
+
+  function onScroll() {
+    if (
+      barRef?.current &&
+      barRef.current.getBoundingClientRect().top !== barDims.top
+    ) {
+      updateBarDims(barRef.current);
+    } else {
+      console.log(barRef.current.getBoundingClientRect().top);
+    }
+  }
+
   useEffect(() => {
     if (barRef?.current) {
       setBarDims(barRef.current.getBoundingClientRect());
     }
   }, [barRef]);
+
+  // horrible
+  useEffect(() => {
+    document.addEventListener("wheel", onScroll);
+    return () => {
+      window.removeEventListener("wheel", onScroll);
+    };
+  }, []);
 
   useEffect(() => {
     // hate this
@@ -36,7 +59,8 @@ export default function PageScroll() {
         LEFTOFFSET +
         ((barDims.width - THUMBSIZE + RIGHTOFFSET) / (NUMPAGES - 1)) *
           (currentPageNumber - 1);
-      setPageNumberHandleStyle({ left });
+      const top = barDims.top;
+      setPageNumberHandleStyle({ left, top });
     }
   }, [barDims, currentPageNumber]);
 
@@ -45,7 +69,7 @@ export default function PageScroll() {
   }
 
   return (
-    <div className={styles.pageScroll}>
+    <div className={styles.pageScroll} onPointerMove={onScroll /* horrible */}>
       <Button
         inner={<ChevLeftSVG />}
         size="pages"

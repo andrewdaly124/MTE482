@@ -37,5 +37,6 @@ module.exports = {
     "react/forbid-prop-types": 0,
     indent: 0,
     "react/react-in-jsx-scope": 0,
+    "prefer-destructuring": 0,
   },
 };
