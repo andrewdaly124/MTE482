@@ -35,5 +35,7 @@ module.exports = {
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     "object-curly-newline": 0,
     "react/forbid-prop-types": 0,
+    indent: 0,
+    "react/react-in-jsx-scope": 0,
   },
 };

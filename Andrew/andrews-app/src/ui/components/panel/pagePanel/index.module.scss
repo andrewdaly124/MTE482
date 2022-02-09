@@ -17,13 +17,20 @@
 
   .scrollbar {
     width: 100%;
+    margin: 8px 0px;
   }
 
-  .description {
+  .preview {
     width: 100%;
+    margin: 8px 0px;
   }
 
-  .pages {
+  .presets {
     width: 100%;
+    margin: 8px 0px;
+
+    .preset {
+      margin: 8px 0px;
+    }
   }
 }

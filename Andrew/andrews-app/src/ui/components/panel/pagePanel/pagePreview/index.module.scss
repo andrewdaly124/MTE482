@@ -1,0 +1,18 @@
+@import "../../../../palette.module.scss";
+
+.pagePreview {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
+
+  .title {
+    font-size: large;
+  }
+
+  .description {
+    font-size: 14px;
+    color: $GREY4;
+    margin-top: 8px;
+  }
+}
