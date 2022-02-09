@@ -1,21 +1,30 @@
-### info
-
-**_Building and running the app_**
+### Info
 
 First you need to install node.
 
-then `cd` to this directory and run the following commands in order:
+### **_debugging the app in web (my preferred testing method. does not preserve window size though)_**
+
+`cd` to  `Andrew/andrews-app` and run the following commands in order:
 
 ```
 npm i
-npm run electron:build
+npm start
+```
+
+### **_Building and running the app in prod (full build, preserves window size)_**
+
+`cd` to  `Andrew/andrews-app` and run the following commands in order:
+
+```
+npm i
+npm run elecbuild
 ```
 
 then navigate to the new `dist` folder and run the setup executable. Done!
 
-**_Debugging_**
+### **_Debugging (preserves window size)_**
 
 ```
 npm i
-npm run electron:serve
+npm run elecserve
 ```
