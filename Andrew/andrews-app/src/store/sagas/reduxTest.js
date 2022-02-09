@@ -1,4 +1,6 @@
+// eslint-disable-next-line no-unused-vars
 import { takeEvery } from "redux-saga/effects";
+// eslint-disable-next-line no-unused-vars
 import { setCurrentAppState } from "../actions";
 
 // eslint-disable-next-line no-unused-vars
@@ -8,5 +10,5 @@ function logSetVarInstance({ payload }) {
 }
 
 export default function* test() {
-  yield takeEvery(setCurrentAppState, logSetVarInstance);
+  // yield takeEvery(setCurrentAppState, logSetVarInstance);
 }

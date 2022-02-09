@@ -1,5 +1,8 @@
 import { useSelector } from "react-redux";
-import { getCurrentPage } from "../../../../store/selectors";
+import {
+  getCurrentPage,
+  getCurrentPageNumber,
+} from "../../../../store/selectors";
 
 import styles from "./index.module.scss";
 
@@ -10,6 +13,8 @@ import PresetDropdown from "./presetDropdown";
 // pages panel inner
 export default function PagePanel() {
   const currentPage = useSelector(getCurrentPage);
+  const currentPageNumber = useSelector(getCurrentPageNumber);
+
   return (
     <div className={styles.pagePanel}>
       <div className={styles.title}>Pages</div>
@@ -22,7 +27,7 @@ export default function PagePanel() {
       <div className={styles.presets}>
         {currentPage.presets.map((preset, i) => {
           return (
-            <div className={styles.preset}>
+            <div className={styles.preset} key={currentPageNumber * 10 + i}>
               <PresetDropdown
                 number={i + 1}
                 name={preset.name || `Preset ${i + 1}`}

@@ -26,10 +26,11 @@ export default function PageScroll() {
   }, [barRef]);
 
   useEffect(() => {
-    if (barRef?.current) {
+    // hate this
+    if (barDims?.left) {
       const THUMBSIZE = 24; // see css
-      const LEFTOFFSET = 3;
-      const RIGHTOFFSET = -7;
+      const LEFTOFFSET = -barDims.width / 2 + 10;
+      const RIGHTOFFSET = -8;
       const left =
         barDims.left +
         LEFTOFFSET +
