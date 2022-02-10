@@ -1,4 +1,4 @@
-@import "../../../../palette.module.scss";
+@import '../../../../palette.module.scss';
 
 .pagePreview {
   display: flex;
@@ -6,13 +6,33 @@
   flex-direction: column;
   width: 100%;
 
-  .title {
-    font-size: large;
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    height: 40px;
+
+    .title {
+      font-size: large;
+    }
+
+    .button {
+      margin-left: 12px;
+      height: 34px;
+      width: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
-  .description {
-    font-size: 14px;
-    color: $GREY4;
+  .body {
     margin-top: 8px;
+
+    .description {
+      font-size: 14px;
+      color: $GREY4;
+    }
   }
 }

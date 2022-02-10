@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
@@ -6,8 +6,12 @@ import styles from './index.module.scss';
 
 const cx = classNames.bind(styles);
 
-export default function Button({ inner, size, onClick }) {
-  const ref = useRef(null);
+export default function InputField({
+  value,
+  onChange,
+  size,
+  placeholder = '',
+}) {
   const [sizeStyles, setSizeStyles] = useState({});
 
   useEffect(() => {
@@ -30,22 +34,25 @@ export default function Button({ inner, size, onClick }) {
   return (
     <div
       className={cx({
-        [styles.button]: true,
+        [styles.inputField]: true,
         [sizeStyles]: true,
       })}
-      onClick={onClick}
-      ref={ref}
     >
       <div className={styles.hoverContainer}>
-        <div className={styles.inner}>{inner}</div>
+        <input
+          type="text"
+          onChange={onChange}
+          value={value}
+          placeholder={placeholder}
+        />
       </div>
     </div>
   );
 }
 
-Button.propTypes = {
-  inner: PropTypes.object.isRequired,
-  // color: PropTypes.string.isRequired, // oneOf plz
-  size: PropTypes.string.isRequired, // oneOf plz
-  onClick: PropTypes.func.isRequired,
+InputField.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  size: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
 };

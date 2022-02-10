@@ -1,16 +1,16 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { getCurrentPageNumber } from "../../../../../store/selectors";
-import { setCurrentPageNumber } from "../../../../../store/actions";
+import React, { useRef, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getCurrentPageNumber } from '../../../../../store/selectors';
+import { setCurrentPageNumber } from '../../../../../store/actions';
 
-import styles from "./index.module.scss";
+import styles from './index.module.scss';
 
-import { ReactComponent as ChevRightSVG } from "../../../../assets/chevron-right.svg";
-import { ReactComponent as ChevLeftSVG } from "../../../../assets/chevron-left.svg";
+import { ReactComponent as ChevRightSVG } from '../../../../assets/chevron-right.svg';
+import { ReactComponent as ChevLeftSVG } from '../../../../assets/chevron-left.svg';
 
-import { NUMPAGES } from "../../../../../store/reducers/pages";
+import { NUMPAGES } from '../../../../../store/reducers/pages';
 
-import Button from "../../../button";
+import Button from '../../../button';
 
 export default function PageScroll() {
   const barRef = useRef(null);
@@ -42,9 +42,9 @@ export default function PageScroll() {
 
   // horrible
   useEffect(() => {
-    document.addEventListener("wheel", onScroll);
+    document.addEventListener('wheel', onScroll);
     return () => {
-      window.removeEventListener("wheel", onScroll);
+      window.removeEventListener('wheel', onScroll);
     };
   }, []);
 
@@ -72,7 +72,7 @@ export default function PageScroll() {
     <div className={styles.pageScroll} onPointerMove={onScroll /* horrible */}>
       <Button
         inner={<ChevLeftSVG />}
-        size="pages"
+        size="small"
         onClick={() => {
           dispatch(setCurrentPageNumber(parseInt(currentPageNumber, 10) - 1));
         }}
@@ -91,7 +91,7 @@ export default function PageScroll() {
       </div>
       <Button
         inner={<ChevRightSVG />}
-        size="pages"
+        size="small"
         onClick={() => {
           dispatch(setCurrentPageNumber(parseInt(currentPageNumber, 10) + 1));
         }}
