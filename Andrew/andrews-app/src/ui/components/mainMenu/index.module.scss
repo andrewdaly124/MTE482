@@ -1,4 +1,4 @@
-@import "../../palette.module.scss";
+@import '../../palette.module.scss';
 
 .mainMenu {
   width: 80px;
@@ -8,6 +8,6 @@
   justify-content: space-around;
   flex-direction: column;
   background-color: $GREY9;
-  border-radius: 4px;
+  border-radius: 16px;
   overflow: hidden;
 }

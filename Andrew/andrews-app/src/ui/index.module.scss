@@ -1,4 +1,4 @@
-@import "./palette.module.scss";
+@import './palette.module.scss';
 
 .ui {
   position: fixed;
@@ -10,21 +10,22 @@
   height: 100%;
   user-select: none;
   display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
 
   background-color: $GREY10;
 
   color: $PRIMARY;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 
   * {
     transition: background-color 0.2s;
   }
 
-  .upperLeftStack {
-    position: absolute;
+  .leftStack {
+    position: relative;
     height: calc(100% - 16px);
-    left: 0;
-    top: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -33,6 +34,25 @@
 
     .stack {
       height: 100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      margin-right: 8px;
+    }
+  }
+
+  .rightStack {
+    height: calc(100% - 16px);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: column;
+    padding: 8px;
+
+    .stack {
+      height: auto;
+      width: 100%;
       display: flex;
       align-items: center;
       flex-direction: column;
