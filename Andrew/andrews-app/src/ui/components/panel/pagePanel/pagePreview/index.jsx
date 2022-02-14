@@ -62,19 +62,17 @@ export default function PagePreview() {
     setIsEditMode(false);
   }, [currentPageNumber]);
 
-  function onInputFieldChange(e, setter) {
-    setter(e.target.value);
-  }
-
   return (
     <div className={styles.pagePreview}>
       <div className={styles.header}>
         {isEditMode ? (
           <InputField
             value={editName}
-            onChange={(e) => onInputFieldChange(e, setEditName)}
-            placeholder="test placeholder"
+            onChange={(val) => setEditName(val)}
+            placeholder={`Page ${currentPageNumber}`}
             autofocus
+            characterLimit={36}
+            size="normal"
           />
         ) : (
           <div className={styles.title}>
@@ -94,8 +92,10 @@ export default function PagePreview() {
         <div className={styles.body}>
           <InputField
             value={editDescription}
-            onChange={(e) => onInputFieldChange(e, setEditDescription)}
-            type="textarea"
+            onChange={(val) => setEditDescription(val)}
+            placeholder="Page Description"
+            characterLimit={248}
+            size="paragraphNormal"
           />
         </div>
       ) : currentPage.description ? (
