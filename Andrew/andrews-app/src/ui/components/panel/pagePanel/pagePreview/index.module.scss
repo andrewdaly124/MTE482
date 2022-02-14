@@ -8,16 +8,23 @@
 
   .header {
     width: 100%;
+    min-height: 40px;
+    height: auto;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     flex-direction: row;
-    min-height: 40px;
 
     .title {
+      box-sizing: border-box;
       width: calc(100% - 40px /* button size */ - 12px /* button margin */);
+      height: 100%;
+      min-height: inherit;
       font-size: large;
-      word-wrap: break-word;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      word-break: break-word;
       user-select: text;
     }
 
