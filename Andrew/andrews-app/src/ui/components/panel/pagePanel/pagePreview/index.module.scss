@@ -1,0 +1,39 @@
+@import "../../../../palette.module.scss";
+
+.pagePreview {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    height: 40px;
+
+    .title {
+      font-size: large;
+    }
+
+    .button {
+      margin-left: 12px;
+      height: 34px;
+      width: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .body {
+    margin-top: 8px;
+
+    .description {
+      font-size: 14px;
+      color: $GREY4;
+      word-wrap: break-word;
+    }
+  }
+}

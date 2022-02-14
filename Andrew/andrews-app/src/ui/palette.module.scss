@@ -1,0 +1,23 @@
+// color palette
+// NEED TO IMPORT TO EVERY FILE THAT USES THESE
+
+$BLACK: #000000;
+$WHITE: #ffffff;
+
+$PRIMARY: $WHITE;
+
+$GREY1: #f2f2f2;
+$GREY2: #e6e6e6;
+$GREY3: #d2d2d2;
+$GREY4: #737373;
+$GREY5: #606060;
+$GREY6: #505050;
+$GREY7: #474747;
+$GREY8: #3d3d3d;
+$GREY9: #2f2f2f;
+$GREY10: #141414;
+
+// quick, bad components
+$BLACKFILTER: rgba(0, 0, 0, 0.25);
+$HOVERLIGHT: rgba(255, 255, 255, 0.075);
+$PRESSEDLIGHT: rgba(255, 255, 255, 0.15);

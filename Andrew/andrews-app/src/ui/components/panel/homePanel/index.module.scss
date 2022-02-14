@@ -1,0 +1,23 @@
+@import "../../../palette.module.scss";
+
+.homePanel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  //background-color: $GREY10;
+  overflow: auto; // better than scroll
+
+  .title {
+    font-size: 40px; // maybe change
+    width: 100%;
+  }
+
+  .inner {
+    font-size: 14px;
+    color: $GREY4;
+    margin: 8px 0px;
+  }
+}

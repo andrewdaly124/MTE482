@@ -9,13 +9,22 @@ require("@electron/remote/main").initialize();
 
 function createWindow() {
   // Create the browser window.
+  const WIDTH = 1100;
+  const HEIGHT = 800;
+
   const win = new BrowserWindow({
-    width: 1300,
-    height: 900,
+    width: WIDTH,
+    height: HEIGHT,
+    minWidth: WIDTH,
+    minHeight: HEIGHT,
+    maxWidth: WIDTH,
+    maxHeight: HEIGHT,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
     },
+    autoHideMenuBar: true,
+    // titleBarStyle: "hidden", // PLEASE BUILD THIS LATE
   });
 
   win.webContents.on(
