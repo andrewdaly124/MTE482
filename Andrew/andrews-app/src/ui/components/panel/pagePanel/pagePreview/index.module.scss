@@ -1,4 +1,4 @@
-@import '../../../../palette.module.scss';
+@import "../../../../palette.module.scss";
 
 .pagePreview {
   display: flex;
@@ -33,6 +33,7 @@
     .description {
       font-size: 14px;
       color: $GREY4;
+      word-wrap: break-word;
     }
   }
 }

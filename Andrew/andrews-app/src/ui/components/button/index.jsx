@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
+import React, { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames/bind";
 
-import styles from './index.module.scss';
+import styles from "./index.module.scss";
 
 const cx = classNames.bind(styles);
 
@@ -13,13 +13,13 @@ export default function Button({ inner, size, onClick }) {
   useEffect(() => {
     // size styles select
     switch (size) {
-      case 'small':
+      case "small":
         setSizeStyles(styles.small);
         break;
-      case 'normal':
+      case "normal":
         setSizeStyles(styles.normal);
         break;
-      case 'large':
+      case "large":
         setSizeStyles(styles.large);
         break;
       default:

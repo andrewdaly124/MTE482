@@ -1,5 +1,10 @@
 import { createReducer } from "typesafe-actions";
-import { setCurrentPageNumber } from "../actions";
+import {
+  setCurrentPageNumber,
+  setPageColor,
+  setPageName,
+  setPageDescription,
+} from "../actions";
 
 export const NUMPAGES = 20;
 export const NUMPRESETS = 4; // probably won't change
@@ -43,14 +48,30 @@ function getDefaultState() {
   return { ...DEFAULT_STATE, pages: emptyPages };
 }
 
-const pages = createReducer(getDefaultState()).handleAction(
-  setCurrentPageNumber,
-  (state, { payload }) => {
+const pages = createReducer(getDefaultState())
+  .handleAction(setCurrentPageNumber, (state, { payload }) => {
     if (payload >= 1 && payload <= NUMPAGES) {
       return { ...state, currentPageNumber: payload };
     }
     return { ...state };
-  }
-);
+  })
+  .handleAction(setPageName, (state, { payload: { index, newName } }) => {
+    const pagesCopy = [...state.pages];
+    pagesCopy[index].name = newName;
+    return { ...state, pages: pagesCopy };
+  })
+  .handleAction(
+    setPageDescription,
+    (state, { payload: { index, newDescription } }) => {
+      const pagesCopy = [...state.pages];
+      pagesCopy[index].description = newDescription;
+      return { ...state, pages: pagesCopy };
+    }
+  )
+  .handleAction(setPageColor, (state, { payload: { index, newColor } }) => {
+    const pagesCopy = [...state.pages];
+    pagesCopy[index].color = newColor;
+    return { ...state, pages: pagesCopy };
+  });
 
 export default pages;

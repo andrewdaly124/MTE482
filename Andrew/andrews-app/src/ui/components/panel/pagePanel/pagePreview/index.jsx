@@ -1,53 +1,66 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   getCurrentPageNumber,
   getCurrentPage,
-} from '../../../../../store/selectors';
+} from "../../../../../store/selectors";
 
-import styles from './index.module.scss';
+import { setPageName, setPageDescription } from "../../../../../store/actions";
 
-import Button from '../../../button';
-import InputField from '../../../inputField';
-import { ReactComponent as RenameSVG } from '../../../../assets/rename.svg';
+import styles from "./index.module.scss";
+
+import Button from "../../../button";
+import InputField from "../../../inputField";
+import { ReactComponent as RenameSVG } from "../../../../assets/rename.svg";
 
 // page preview, need edit/save
 export default function PagePreview() {
+  const dispatch = useDispatch();
   const currentPageNumber = useSelector(getCurrentPageNumber);
   const currentPage = useSelector(getCurrentPage);
-
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [editEvent, setEditEvent] = useState(0);
+  const [isEditMode, setIsEditMode] = useState(true); // immediately toggles to false in useEffect
   const [editName, setEditName] = useState(currentPage.name);
   const [editDescription, setEditDescription] = useState(
-    currentPage.description,
+    currentPage.description
   );
-
-  let onEnter;
-
-  function toggleEditMode(explicitFlag) {
-    const isEditOverride = explicitFlag ?? isEditMode;
-    console.log('toggling edit mode', isEditOverride);
-
-    if (isEditOverride) {
-      // save and push to state
-      window.removeEventListener('keydown', onEnter);
-      console.log('remove event listener');
-    } else {
-      window.addEventListener('keydown', onEnter);
-      console.log('add event listener');
+  const onEnter = useCallback((e) => {
+    if (e?.code && e.code === "Enter") {
+      setEditEvent(editEvent + 3);
     }
+  }, []);
 
-    setIsEditMode(!isEditOverride);
-    setEditName(currentPage.name);
-    setEditDescription(currentPage.description);
+  // This math is so stupid lmfao
+  function toggleEditMode() {
+    setEditEvent(editEvent - 5);
   }
 
-  onEnter = (e) => {
-    console.log(e.code);
-    if (e.code === 'Enter') {
-      toggleEditMode(true);
+  useEffect(() => {
+    if (isEditMode) {
+      // save and push to state
+      window.removeEventListener("keydown", onEnter);
+      dispatch(
+        setPageName({ index: currentPageNumber - 1, newName: editName })
+      );
+      dispatch(
+        setPageDescription({
+          index: currentPageNumber - 1,
+          newDescription: editDescription,
+        })
+      );
+    } else {
+      window.addEventListener("keydown", onEnter);
+      setEditName(currentPage.name);
+      setEditDescription(currentPage.description);
     }
-  };
+
+    setIsEditMode(!isEditMode);
+  }, [editEvent]);
+
+  useEffect(() => {
+    // turn off edit mode without saving if page is changed
+    setIsEditMode(false);
+  }, [currentPageNumber]);
 
   function onInputFieldChange(e, setter) {
     setter(e.target.value);
@@ -61,6 +74,7 @@ export default function PagePreview() {
             value={editName}
             onChange={(e) => onInputFieldChange(e, setEditName)}
             placeholder="test placeholder"
+            autofocus
           />
         ) : (
           <div className={styles.title}>
@@ -84,7 +98,7 @@ export default function PagePreview() {
             type="textarea"
           />
         </div>
-      ) : /* currentPage.description */ true ? ( // obv remove this
+      ) : currentPage.description ? (
         <div className={styles.body}>
           <div className={styles.description}>
             {currentPage.description ||
