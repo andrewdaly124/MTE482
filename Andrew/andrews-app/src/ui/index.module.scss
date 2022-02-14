@@ -1,4 +1,4 @@
-@import './palette.module.scss';
+@import "./palette.module.scss";
 
 .ui {
   position: fixed;
@@ -17,7 +17,7 @@
   background-color: $GREY10;
 
   color: $PRIMARY;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 
   * {
     transition: background-color 0.2s;
