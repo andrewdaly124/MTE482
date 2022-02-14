@@ -60,6 +60,7 @@ export default function PagePreview() {
           <InputField
             value={editName}
             onChange={(e) => onInputFieldChange(e, setEditName)}
+            placeholder="test placeholder"
           />
         ) : (
           <div className={styles.title}>
@@ -80,6 +81,7 @@ export default function PagePreview() {
           <InputField
             value={editDescription}
             onChange={(e) => onInputFieldChange(e, setEditDescription)}
+            type="textarea"
           />
         </div>
       ) : /* currentPage.description */ true ? ( // obv remove this

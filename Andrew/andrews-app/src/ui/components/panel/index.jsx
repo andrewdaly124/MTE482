@@ -1,13 +1,13 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import classNames from "classnames/bind";
+import React, { useRef, useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import classNames from 'classnames/bind';
 
-import { getCurrentAppState } from "../../../store/selectors";
+import { getCurrentAppState } from '../../../store/selectors';
 
-import styles from "./index.module.scss";
-import PagePanel from "./pagePanel";
-import HomePanel from "./homePanel";
-import DeployPanel from "./deployPanel";
+import styles from './index.module.scss';
+import PagePanel from './pagePanel';
+import HomePanel from './homePanel';
+import DeployPanel from './deployPanel';
 
 const cx = classNames.bind(styles);
 
@@ -16,6 +16,7 @@ export default function Panel() {
   const panelRef = useRef();
   const [panelDims, setPanelDims] = useState({});
   const [turnaryStyle, setTurnaryStyle] = useState({});
+  // eslint-disable-next-line no-unused-vars
   const [overlayStyle, setOverlayStyle] = useState({});
   const currentAppState = useSelector(getCurrentAppState);
 
@@ -73,11 +74,13 @@ export default function Panel() {
           <DeployPanel />
         </div>
       </div>
+      {/*
       <div className={styles.gradientOverlayContainer}>
         <div className={styles.gradientOverlayVert} style={overlayStyle}>
           <div className={styles.gradientOverlayHorz} style={overlayStyle} />
         </div>
       </div>
+      */}
     </div>
   );
 }

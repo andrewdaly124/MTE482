@@ -10,6 +10,7 @@ export default function InputField({
   value,
   onChange,
   size,
+  type = 'input',
   placeholder = '',
 }) {
   const [sizeStyles, setSizeStyles] = useState({});
@@ -39,12 +40,21 @@ export default function InputField({
       })}
     >
       <div className={styles.hoverContainer}>
-        <input
-          type="text"
-          onChange={onChange}
-          value={value}
-          placeholder={placeholder}
-        />
+        {type === 'input' ? (
+          <input
+            type="text"
+            onChange={onChange}
+            value={value}
+            placeholder={placeholder}
+          />
+        ) : (
+          <textarea
+            type="text"
+            onChange={onChange}
+            value={value}
+            placeholder={placeholder}
+          />
+        )}
       </div>
     </div>
   );
@@ -54,5 +64,6 @@ InputField.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   size: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
 };
