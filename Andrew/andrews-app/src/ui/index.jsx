@@ -4,6 +4,7 @@ import { KeyDownHandler, KeyUpHandler } from "../utils/input_handler";
 import MainMenu from "./components/mainMenu";
 import Panel from "./components/panel";
 import PresetEdit from "./components/dialogs/presetEdit";
+import BackgroundAnimation from "./components/backgroundAnimation";
 
 import styles from "./index.module.scss";
 
@@ -15,6 +16,7 @@ export default function Ui() {
 
   return (
     <div className={styles.ui}>
+      <BackgroundAnimation />
       <div className={styles.leftStack}>
         <div className={styles.stack}>
           <MainMenu />

@@ -16,8 +16,10 @@ export default function MainMenuItem({ active, icon, label, onClick }) {
       })}
       onClick={onClick}
     >
-      <div className={styles.icon}>{icon}</div>
-      <div className={styles.label}>{label}</div>
+      <div className={styles.hoverContainer}>
+        <div className={styles.icon}>{icon}</div>
+        <div className={styles.label}>{label}</div>
+      </div>
     </div>
   );
 }

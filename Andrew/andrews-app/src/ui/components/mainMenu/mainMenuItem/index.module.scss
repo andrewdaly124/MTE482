@@ -3,47 +3,41 @@
 .mainMenuItem {
   width: 80px;
   height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
   cursor: pointer;
 
   &.active {
-    background-color: $GREY7;
-
-    &:hover {
-      background-color: $GREY6;
-    }
-
-    &:active {
-      background-color: $GREY5;
-    }
+    background-color: $PRESSEDDARK;
   }
 
-  &:not(.active) {
+  .hoverContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
     &:hover {
-      background-color: $GREY8;
+      background-color: $HOVERDARK;
     }
-
     &:active {
-      background-color: $GREY7;
+      background-color: $PRESSEDDARK;
     }
-  }
 
-  .icon {
-    width: 30px;
-    height: 30px;
-    margin-bottom: 4px;
-
-    svg {
+    .icon {
       width: 30px;
       height: 30px;
-      color: $GREY1;
-    }
-  }
+      margin-bottom: 4px;
 
-  .label {
-    font-size: 12px;
+      svg {
+        width: 30px;
+        height: 30px;
+        color: $GREY1;
+      }
+    }
+
+    .label {
+      font-size: 12px;
+    }
   }
 }

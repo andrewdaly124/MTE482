@@ -7,9 +7,9 @@
   align-items: center;
   justify-content: space-around;
   flex-direction: column;
-  background-color: $GREY9;
   border-radius: 16px;
   overflow: hidden;
+  backdrop-filter: $BACKGROUNDFILTER;
 
   .turnaryContainer {
     position: relative;

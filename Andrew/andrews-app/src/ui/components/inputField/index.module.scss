@@ -7,13 +7,9 @@
   align-items: center;
   justify-content: flex-start;
   border-radius: 8px;
-  background-color: $GREY7;
+  background-color: $DARKBACKGROUND;
   overflow: hidden;
   cursor: text;
-
-  * {
-    font-family: "Montserrat", sans-serif;
-  }
 
   &.small {
     height: 26px;
@@ -43,11 +39,11 @@
     justify-content: center;
 
     &:hover {
-      background-color: $HOVERLIGHT;
+      background-color: $HOVERDARK;
     }
 
     &:active {
-      background-color: $PRESSEDLIGHT;
+      background-color: $PRESSEDDARK;
     }
 
     textarea {
@@ -66,13 +62,13 @@
 
       /* Handle */
       &::-webkit-scrollbar-thumb {
-        background: $GREY4;
+        background-color: $HOVERLIGHT;
         border-radius: 4px;
       }
 
       /* Handle on hover */
       &::-webkit-scrollbar-thumb:hover {
-        background: $GREY3;
+        background-color: $PRESSEDLIGHT;
         border-radius: 4px;
       }
 

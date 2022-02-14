@@ -4,6 +4,12 @@
 $BLACK: #000000;
 $WHITE: #ffffff;
 
+$BACKGROUNDFILTER: blur(100px) brightness(0.7);
+
+// background animation
+$GREY10PHASE1: rgba(20, 20, 20, 0.1);
+$GREY10PHASE2: rgba(20, 20, 20, 0.5); // keep this updated with grey 10
+
 $PRIMARY: $WHITE;
 
 $GREY1: #f2f2f2;
@@ -19,5 +25,14 @@ $GREY10: #141414;
 
 // quick, bad components
 $BLACKFILTER: rgba(0, 0, 0, 0.25);
+
+$DARKBACKGROUND: rgba(20, 20, 20, 0.4); // GREY10
+$DARKERBACKGROUND: rgba(20, 20, 20, 0.7); // GREY10
+
+$LIGHTBACKGROUND: rgba(242, 242, 242, 0.6); // GREY10
+
 $HOVERLIGHT: rgba(255, 255, 255, 0.075);
 $PRESSEDLIGHT: rgba(255, 255, 255, 0.15);
+
+$HOVERDARK: rgba(20, 20, 20, 0.2);
+$PRESSEDDARK: rgba(20, 20, 20, 0.45);

@@ -18,13 +18,13 @@
 
   /* Handle */
   &::-webkit-scrollbar-thumb {
-    background: $GREY4;
+    background-color: $HOVERLIGHT;
     border-radius: 4px;
   }
 
   /* Handle on hover */
   &::-webkit-scrollbar-thumb:hover {
-    background: $GREY5;
+    background-color: $PRESSEDLIGHT;
     border-radius: 4px;
   }
 

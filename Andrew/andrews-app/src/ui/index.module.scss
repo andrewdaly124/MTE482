@@ -14,13 +14,14 @@
   justify-content: flex-start;
   flex-direction: row;
 
-  background-color: $GREY10;
+  background-color: grey; // needs to be dynamic
 
   color: $PRIMARY;
-  font-family: "Montserrat", sans-serif;
 
+  // Globals
   * {
     transition: background-color 0.2s;
+    font-family: "Montserrat", sans-serif;
   }
 
   .leftStack {
