@@ -1,0 +1,39 @@
+@import "../../../palette.module.scss";
+
+.hueSlider {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  input[type="range"] {
+    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+    cursor: crosshair;
+    position: relative;
+    background: linear-gradient(
+      to left,
+      hsl(0, 100%, 50%),
+      hsl(45, 100%, 50%),
+      hsl(90, 100%, 50%),
+      hsl(135, 100%, 50%),
+      hsl(180, 100%, 50%),
+      hsl(225, 100%, 50%),
+      hsl(270, 100%, 50%),
+      hsl(315, 100%, 50%),
+      hsl(360, 100%, 50%)
+    );
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 12px;
+    width: 12px;
+    border: 2px solid $GREY3;
+    outline: 2px solid $GREY8;
+    border-radius: 50%;
+  }
+}

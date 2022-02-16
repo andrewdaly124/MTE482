@@ -20,24 +20,40 @@
       padding: 16px;
 
       .presetProperties {
-        // background-color: $DARKBACKGROUND; // testing only
+        width: 100%;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: flex-start;
         flex-direction: column;
-        width: 100%;
-        height: 100%;
+
+        .filePicker {
+          width: 100%;
+          height: auto;
+          margin-bottom: 8px;
+        }
+
+        .name {
+          width: 100%;
+          height: auto;
+          margin-bottom: 8px;
+        }
+
+        .description {
+          width: 100%;
+          height: 100%;
+        }
       }
 
       .colorPickerContainer {
+        width: 100%;
+        height: 100%;
         // background-color: $DARKBACKGROUND; // testing only
         display: flex;
         align-items: center;
         justify-content: flex-start;
         flex-direction: column;
-        margin-left: 8px;
-        width: 100%;
-        height: 100%;
+        margin-left: 16px;
       }
     }
   }

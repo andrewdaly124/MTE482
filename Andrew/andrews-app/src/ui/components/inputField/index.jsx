@@ -13,6 +13,7 @@ export default function InputField({
   placeholder = "",
   autofocus = false,
   characterLimit = 248,
+  label,
 }) {
   const [sizeStyles, setSizeStyles] = useState({});
   const inputRef = useRef(null);
@@ -44,6 +45,9 @@ export default function InputField({
       case "paragraphNormal":
         setSizeStyles(styles.paragraphNormal);
         break;
+      case "infinite":
+        setSizeStyles(styles.infinite);
+        break;
       default:
         setSizeStyles(styles.normal);
     }
@@ -55,30 +59,33 @@ export default function InputField({
   }, []);
 
   return (
-    <div
-      className={cx({
-        [styles.inputField]: true,
-        [sizeStyles]: true,
-      })}
-    >
-      <div className={styles.hoverContainer}>
-        {size !== "paragraphNormal" ? (
-          <input
-            type="text"
-            onChange={onChangeCallback}
-            value={value}
-            placeholder={placeholder}
-            ref={inputRef}
-          />
-        ) : (
-          <textarea
-            type="text"
-            onChange={onChangeCallback}
-            value={value}
-            placeholder={placeholder}
-            ref={inputRef}
-          />
-        )}
+    <div className={styles.inputField}>
+      {label && <div className={styles.label}>{label}</div>}
+      <div
+        className={cx({
+          [styles.inputContainer]: true,
+          [sizeStyles]: true,
+        })}
+      >
+        <div className={styles.hoverContainer}>
+          {size !== "paragraphNormal" && size !== "infinite" ? (
+            <input
+              type="text"
+              onChange={onChangeCallback}
+              value={value}
+              placeholder={placeholder}
+              ref={inputRef}
+            />
+          ) : (
+            <textarea
+              type="text"
+              onChange={onChangeCallback}
+              value={value}
+              placeholder={placeholder}
+              ref={inputRef}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
@@ -91,4 +98,5 @@ InputField.propTypes = {
   placeholder: PropTypes.string,
   autofocus: PropTypes.bool,
   characterLimit: PropTypes.number,
+  label: PropTypes.string,
 };
