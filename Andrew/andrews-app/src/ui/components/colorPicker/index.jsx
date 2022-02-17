@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import HueSlider, { MAXHUE } from './hueSlider';
+import ColorShelf from './colorShelf';
 
 import styles from './index.module.scss';
 
@@ -87,7 +88,9 @@ export default function ColorPicker() {
       <div className={styles.hueSlider}>
         <HueSlider onChange={onHueSliderChange} />
       </div>
-      <div className={styles.colorHistory}>test</div>
+      <div className={styles.colorHistory}>
+        <ColorShelf />
+      </div>
       <div className={styles.hexInput}>test</div>
     </div>
   );

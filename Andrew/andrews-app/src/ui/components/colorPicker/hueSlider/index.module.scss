@@ -1,4 +1,4 @@
-@import "../../../palette.module.scss";
+@import '../../../palette.module.scss';
 
 .hueSlider {
   width: 100%;
@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: space-between;
 
-  input[type="range"] {
+  input[type='range'] {
     -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
     cursor: crosshair;
     position: relative;
@@ -28,7 +28,7 @@
     border-radius: 4px;
   }
 
-  input[type="range"]::-webkit-slider-thumb {
+  input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none;
     height: 12px;
     width: 12px;
