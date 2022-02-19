@@ -1,16 +1,16 @@
-import { createReducer } from 'typesafe-actions';
-import { setCurrentAppState, setColorInHistory } from '../actions';
+import { createReducer } from "typesafe-actions";
+import { setCurrentAppState, setColorInHistory } from "../actions";
 
 export const APP_STATES = { home: 0, pages: 1, bluetooth: 2 };
 export const DEFAULT_COLOR_HISTORY = [
-  'FFFFFF',
-  'FF0000',
-  'FFBF00',
-  '00FF40',
-  '00FFFF',
-  '0040FF',
-  '8000FF',
-  'FF00BF',
+  "FFFFFF",
+  "FF0000",
+  "FFBF00",
+  "00FF40",
+  "00FFFF",
+  "0040FF",
+  "8000FF",
+  "FF00BF",
 ];
 
 const DEFAULT_STATE = {

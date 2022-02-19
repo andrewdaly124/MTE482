@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
 
-import styles from './index.module.scss';
+import styles from "./index.module.scss";
 
 export const MINHUE = 0;
 export const MAXHUE = 360;

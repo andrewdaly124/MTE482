@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 
-import HueSlider, { MAXHUE } from './hueSlider';
-import ColorShelf from './colorShelf';
+import HueSlider, { MAXHUE } from "./hueSlider";
+import ColorShelf from "./colorShelf";
 
-import styles from './index.module.scss';
+import styles from "./index.module.scss";
 
 export default function ColorPicker() {
   const canvasRef = useRef(null); // not setting up an effect for this. fuck that noise
@@ -31,16 +31,16 @@ export default function ColorPicker() {
       const dims = canvasRef.current.getBoundingClientRect();
       const horizontalPercent = Math.max(
         0,
-        Math.min(100, ((e.clientX - dims.left) / dims.width) * 100),
+        Math.min(100, ((e.clientX - dims.left) / dims.width) * 100)
       );
       const verticalPercent = Math.max(
         0,
-        Math.min(100, ((e.clientY - dims.top) / dims.height) * 100),
+        Math.min(100, ((e.clientY - dims.top) / dims.height) * 100)
       );
 
       const newSaturation = Math.round(horizontalPercent);
       const newLevel = Math.round(
-        (100 - verticalPercent) * ((100 - horizontalPercent / 2) / 100),
+        (100 - verticalPercent) * ((100 - horizontalPercent / 2) / 100)
       );
 
       // setters
@@ -58,15 +58,15 @@ export default function ColorPicker() {
   // eslint-disable-next-line no-unused-vars
   function onPointerUpCanvas(e) {
     // remove event listeners
-    window.removeEventListener('pointermove', onPointerMoveCanvas);
-    window.removeEventListener('pointerup', onPointerUpCanvas);
+    window.removeEventListener("pointermove", onPointerMoveCanvas);
+    window.removeEventListener("pointerup", onPointerUpCanvas);
   }
 
   function onPointerDownCanvas(e) {
     onPointerMoveCanvas(e); // init thumb position
     // add event listeners
-    window.addEventListener('pointermove', onPointerMoveCanvas);
-    window.addEventListener('pointerup', onPointerUpCanvas);
+    window.addEventListener("pointermove", onPointerMoveCanvas);
+    window.addEventListener("pointerup", onPointerUpCanvas);
   }
 
   function onHueSliderChange(e) {
