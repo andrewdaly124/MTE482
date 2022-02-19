@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import HueSlider, { MAXHUE } from "./hueSlider";
+import HueSlider from "./hueSlider";
 import ColorShelf from "./colorShelf";
 
 import styles from "./index.module.scss";
 
 export default function ColorPicker() {
+  // refs
   const canvasRef = useRef(null); // not setting up an effect for this. fuck that noise
-  // eslint-disable-next-line no-unused-vars
+
+  // useStates
   const [currHue, setCurrHue] = useState(0);
-  // eslint-disable-next-line no-unused-vars
   const [currSaturation, setCurrSaturation] = useState(100);
-  // eslint-disable-next-line no-unused-vars
   const [currLevel, setCurrLevel] = useState(100);
   const [hueBackdropStyle, setHueBackdropStyle] = useState({});
   const [canvasThumbStyle, setCanvasThumbStyle] = useState({});
@@ -70,7 +70,7 @@ export default function ColorPicker() {
   }
 
   function onHueSliderChange(e) {
-    setCurrHue(MAXHUE - e.target.value);
+    setCurrHue(e.target.value);
   }
 
   return (

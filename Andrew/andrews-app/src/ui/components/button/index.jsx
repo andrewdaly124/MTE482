@@ -6,35 +6,28 @@ import styles from "./index.module.scss";
 
 const cx = classNames.bind(styles);
 
-export default function Button({ inner, size, onClick }) {
+export default function Button({ inner, size = "normal", onClick, color }) {
   const ref = useRef(null);
-  const [sizeStyles, setSizeStyles] = useState({});
+  const [explicitStyle, setExplicitStyle] = useState({});
 
   useEffect(() => {
-    // size styles select
-    switch (size) {
-      case "small":
-        setSizeStyles(styles.small);
-        break;
-      case "normal":
-        setSizeStyles(styles.normal);
-        break;
-      case "large":
-        setSizeStyles(styles.large);
-        break;
-      default:
-        setSizeStyles(styles.normal);
+    if (color) {
+      setExplicitStyle({
+        backgroundColor: `#${color}`,
+        // outline: `2px solid grey`,
+      });
     }
-  }, []);
+  }, [color]);
 
   return (
     <div
       className={cx({
         [styles.button]: true,
-        [sizeStyles]: true,
+        [styles[size]]: true,
       })}
       onClick={onClick}
       ref={ref}
+      style={explicitStyle}
     >
       <div className={styles.hoverContainer}>
         <div className={styles.inner}>{inner}</div>
@@ -48,4 +41,5 @@ Button.propTypes = {
   // color: PropTypes.string.isRequired, // oneOf plz
   size: PropTypes.string.isRequired, // oneOf plz
   onClick: PropTypes.func.isRequired,
+  color: PropTypes.string,
 };

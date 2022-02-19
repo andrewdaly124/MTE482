@@ -9,6 +9,12 @@
   cursor: pointer;
   background-color: $DARKBACKGROUND;
 
+  &.color {
+    height: 16px;
+    min-width: 4px;
+    width: 100%;
+  }
+
   &.small {
     height: 26px;
     min-width: 26px;
