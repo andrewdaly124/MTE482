@@ -1,11 +1,21 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
+import PropTypes from "prop-types";
+import hexToHsl from "hex-to-hsl";
+import hexToRgb from "hex-rgb";
+import hslToHex from "hsl-to-hex";
 
 import HueSlider from "./hueSlider";
 import ColorShelf from "./colorShelf";
 
 import styles from "./index.module.scss";
 
-export default function ColorPicker() {
+export default function ColorPicker({ initialColor, onSave }) {
   // refs
   const canvasRef = useRef(null); // not setting up an effect for this. fuck that noise
 
@@ -13,18 +23,96 @@ export default function ColorPicker() {
   const [currHue, setCurrHue] = useState(0);
   const [currSaturation, setCurrSaturation] = useState(100);
   const [currLevel, setCurrLevel] = useState(100);
-  const [hueBackdropStyle, setHueBackdropStyle] = useState({});
-  const [canvasThumbStyle, setCanvasThumbStyle] = useState({});
+  /**
+   * This SUCKS but we're running out of time and this is the final iteration of this component
+   *
+   * Employers if you see this this is not representative of me or my brand
+   */
+  const [badUpdateFlag, setBadUpdateFlag] = useState(0);
 
-  useEffect(() => {
-    setHueBackdropStyle({
-      background: `linear-gradient(90deg, rgba(255, 255, 255, 1), hsl(${currHue}, 100%, 50%))`,
-    });
-    setCanvasThumbStyle({
-      ...canvasThumbStyle,
+  // useMemos
+  const canvasThumbStyle = useMemo(() => {
+    if (canvasRef?.current) {
+      const dims = canvasRef.current.getBoundingClientRect();
+      // Update cursor positions
+      // derived from simplifying eqns from onPointerMoveCanvas
+      const y =
+        dims.top +
+        dims.height -
+        (dims.height * currLevel) / (100 - currSaturation / 2);
+      const x = dims.left + (dims.width * currSaturation) / 100;
+      return {
+        left: `${Math.max(0, Math.min(dims.width, x - dims.left))}px`,
+        top: `${Math.max(0, Math.min(dims.height, y - dims.top))}px`,
+        background: `hsl(${currHue}, ${currSaturation}%, ${currLevel}%)`,
+      };
+    }
+    return {
       background: `hsl(${currHue}, ${currSaturation}%, ${currLevel}%)`,
-    });
+    };
+  }, [currHue, currSaturation, currLevel]);
+
+  // Canvas style updates
+  const hueBackdropStyle = useMemo(() => {
+    return {
+      background: `linear-gradient(90deg, rgba(255, 255, 255, 1), hsl(${currHue}, 100%, 50%))`,
+    };
   }, [currHue]);
+
+  // uneCallbacks
+  const onSaveCallback = useCallback(
+    (h, s, l) => {
+      const hue = h ?? currHue;
+      const sat = s ?? currSaturation;
+      const lev = l ?? currLevel;
+
+      setCurrHue(hue);
+      setCurrSaturation(sat);
+      setCurrLevel(lev);
+
+      const rgb = hslToHex(hue, sat, lev).substring(1, 7).toUpperCase();
+      onSave(rgb);
+    },
+    [currHue, currSaturation, currLevel]
+  );
+
+  // Updates UI and sets state if a hex color is selected
+  const updateOnExplicitColorSelect = useCallback(
+    (color) => {
+      if (!color) {
+        onSaveCallback();
+      } else {
+        const rgb = hexToRgb(color);
+        // Don't want onWhite to select red hue
+        if (rgb.red === 255 && rgb.green === 255 && rgb.blue === 255) {
+          onSaveCallback(null, 0, 100);
+        } else {
+          const hsl = hexToHsl(color);
+          onSaveCallback(...hsl);
+        }
+      }
+    },
+    [onSaveCallback]
+  );
+
+  useEffect(
+    () => {
+      if (initialColor) {
+        // initial color styles
+        updateOnExplicitColorSelect(initialColor);
+      }
+    },
+    [
+      /** no initial color dependancy. only run on start */
+    ]
+  );
+
+  // Extremely desperate event
+  useEffect(() => {
+    if (badUpdateFlag > 0) {
+      /** EW */ onSaveCallback();
+    }
+  }, [badUpdateFlag]);
 
   function onPointerMoveCanvas(e) {
     if (canvasRef?.current) {
@@ -46,12 +134,6 @@ export default function ColorPicker() {
       // setters
       setCurrSaturation(newSaturation);
       setCurrLevel(newLevel);
-      setCanvasThumbStyle({
-        ...canvasThumbStyle,
-        left: `${Math.max(0, Math.min(dims.width, e.clientX - dims.left))}px`,
-        top: `${Math.max(0, Math.min(dims.height, e.clientY - dims.top))}px`,
-        background: `hsl(${currHue}, ${newSaturation}%, ${newLevel}%)`,
-      });
     }
   }
 
@@ -60,6 +142,8 @@ export default function ColorPicker() {
     // remove event listeners
     window.removeEventListener("pointermove", onPointerMoveCanvas);
     window.removeEventListener("pointerup", onPointerUpCanvas);
+    // set color
+    setBadUpdateFlag(badUpdateFlag + 1);
   }
 
   function onPointerDownCanvas(e) {
@@ -86,12 +170,27 @@ export default function ColorPicker() {
         </div>
       </div>
       <div className={styles.hueSlider}>
-        <HueSlider onChange={onHueSliderChange} />
+        <HueSlider
+          onChange={onHueSliderChange}
+          value={parseInt(currHue, 10)}
+          onPointerUp={() => {
+            setBadUpdateFlag(badUpdateFlag + 1);
+          }}
+        />
       </div>
       <div className={styles.colorHistory}>
-        <ColorShelf />
+        <ColorShelf
+          onClick={(color) => {
+            updateOnExplicitColorSelect(color);
+          }}
+        />
       </div>
       <div className={styles.hexInput}>test</div>
     </div>
   );
 }
+
+ColorPicker.propTypes = {
+  initialColor: PropTypes.string,
+  onSave: PropTypes.func.isRequired,
+};

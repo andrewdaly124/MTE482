@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { getColorHistory } from "../../../../store/selectors";
 
@@ -6,18 +7,28 @@ import styles from "./index.module.scss";
 
 import Button from "../../button";
 
-export default function ColorShelf() {
+export default function ColorShelf({ onClick }) {
   const colorHistory = useSelector(getColorHistory);
+
   return (
     <div className={styles.colorShelf}>
       {colorHistory.map((color, index) => {
-        console.log(index, color);
         return (
           <div className={styles.button} key={index}>
-            <Button color={color} size="color" />
+            <Button
+              color={color}
+              size="color"
+              onClick={() => {
+                onClick(color);
+              }}
+            />
           </div>
         );
       })}
     </div>
   );
 }
+
+ColorShelf.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};

@@ -6,6 +6,10 @@ import InputField from "../../inputField";
 import ColorPicker from "../../colorPicker";
 
 export default function PresetEdit() {
+  function onSaveColor(color) {
+    console.log("presetEdit", color);
+  }
+
   return (
     <div className={styles.presetEdit}>
       <div className={styles.backgroundContainer}>
@@ -22,7 +26,7 @@ export default function PresetEdit() {
             </div>
           </div>
           <div className={styles.colorPickerContainer}>
-            <ColorPicker />
+            <ColorPicker initialColor="123456" onSave={onSaveColor} />
           </div>
         </div>
       </div>

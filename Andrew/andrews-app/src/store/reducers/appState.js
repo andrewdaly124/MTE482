@@ -23,7 +23,7 @@ const appState = createReducer(DEFAULT_STATE)
     return { ...state, currentAppState: payload };
   })
   .handleAction(setColorInHistory, (state, { payload: { index, color } }) => {
-    console.log(index, color);
+    console.log("appstate", index, color);
     const newColorHistory = [...state.colorHistory];
     newColorHistory[index] = color;
     return { ...state, colorHistory: newColorHistory };
