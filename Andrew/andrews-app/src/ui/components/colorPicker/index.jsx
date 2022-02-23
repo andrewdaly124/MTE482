@@ -5,17 +5,23 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import hexToHsl from "hex-to-hsl";
 import hexToRgb from "hex-rgb";
 import hslToHex from "hsl-to-hex";
+import { getColorHistory } from "../../../store/selectors";
 
 import HueSlider from "./hueSlider";
 import ColorShelf from "./colorShelf";
+import InputField from "../inputField";
 
 import styles from "./index.module.scss";
 
 export default function ColorPicker({ initialColor, onSave }) {
+  // redux
+  const colorHistory = useSelector(getColorHistory);
+
   // refs
   const canvasRef = useRef(null); // not setting up an effect for this. fuck that noise
 
@@ -23,6 +29,7 @@ export default function ColorPicker({ initialColor, onSave }) {
   const [currHue, setCurrHue] = useState(0);
   const [currSaturation, setCurrSaturation] = useState(100);
   const [currLevel, setCurrLevel] = useState(100);
+  const [hexInput, setHexInput] = useState("");
   /**
    * This SUCKS but we're running out of time and this is the final iteration of this component
    *
@@ -95,15 +102,32 @@ export default function ColorPicker({ initialColor, onSave }) {
     [onSaveCallback]
   );
 
+  // hex Input explicit from hsl
+  const updateHexInput = useCallback(
+    (h, s, l) => {
+      const hue = h ?? currHue;
+      const sat = s ?? currSaturation;
+      const lev = l ?? currLevel;
+
+      const rgb = hslToHex(hue, sat, lev).substring(1, 7).toUpperCase();
+      setHexInput(rgb);
+    },
+    [currHue, currSaturation, currLevel]
+  );
+
+  // useEffects
   useEffect(
     () => {
       if (initialColor) {
         // initial color styles
         updateOnExplicitColorSelect(initialColor);
+        setHexInput(initialColor.toUpperCase());
+      } else {
+        setHexInput(colorHistory[0]);
       }
     },
     [
-      /** no initial color dependancy. only run on start */
+      /** run on start */
     ]
   );
 
@@ -134,6 +158,7 @@ export default function ColorPicker({ initialColor, onSave }) {
       // setters
       setCurrSaturation(newSaturation);
       setCurrLevel(newLevel);
+      updateHexInput(null, newSaturation, newLevel);
     }
   }
 
@@ -155,6 +180,7 @@ export default function ColorPicker({ initialColor, onSave }) {
 
   function onHueSliderChange(e) {
     setCurrHue(e.target.value);
+    updateHexInput();
   }
 
   return (
@@ -182,10 +208,16 @@ export default function ColorPicker({ initialColor, onSave }) {
         <ColorShelf
           onClick={(color) => {
             updateOnExplicitColorSelect(color);
+            setHexInput(color);
           }}
         />
       </div>
-      <div className={styles.hexInput}>test</div>
+      <div className={styles.hexInput}>
+        <div className={styles.colorPreview} />
+        <div className={styles.input}>
+          <InputField value={`# ${hexInput.toUpperCase()}`} />
+        </div>
+      </div>
     </div>
   );
 }
