@@ -26,7 +26,7 @@ export default function PresetEdit() {
             </div>
           </div>
           <div className={styles.colorPickerContainer}>
-            <ColorPicker initialColor="123456" onSave={onSaveColor} />
+            <ColorPicker onSave={onSaveColor} />
           </div>
         </div>
       </div>
