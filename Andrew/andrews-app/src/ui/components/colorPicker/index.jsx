@@ -34,6 +34,10 @@ export default function ColorPicker({ initialColor, onSave }) {
    * This SUCKS but we're running out of time and this is the final iteration of this component
    *
    * Employers if you see this this is not representative of me or my brand
+   *
+   * btttwwwww the reason this is needed is cause window hooks don't update
+   * with React useStates... this flag doesn't require knowledge of
+   * React updates soooo we good
    */
   const [badUpdateFlag, setBadUpdateFlag] = useState(0);
 
@@ -89,14 +93,13 @@ export default function ColorPicker({ initialColor, onSave }) {
       if (!color) {
         onSaveCallback();
       } else {
+        const hsl = hexToHsl(color);
         const rgb = hexToRgb(color);
-        // Don't want onWhite to select red hue
-        if (rgb.red === 255 && rgb.green === 255 && rgb.blue === 255) {
-          onSaveCallback(null, 0, 100);
-        } else {
-          const hsl = hexToHsl(color);
-          onSaveCallback(...hsl);
+        // Don't want shades to select red hue
+        if (rgb.red === rgb.green && rgb.green === rgb.blue) {
+          hsl[0] = null;
         }
+        onSaveCallback(...hsl);
       }
     },
     [onSaveCallback]
@@ -183,6 +186,19 @@ export default function ColorPicker({ initialColor, onSave }) {
     updateHexInput();
   }
 
+  function onHexInputChange(val) {
+    // https://stackoverflow.com/a/5317339
+    const hex = /^[0-9A-Fa-f]+$/g; // only hex characters
+    const extras = /[#\s]+/g;
+    const newHex = val.replace(extras, "");
+    if (hex.test(newHex) || newHex.length === 0) {
+      setHexInput(newHex);
+      if (newHex.length === 6) {
+        updateOnExplicitColorSelect(newHex);
+      }
+    }
+  }
+
   return (
     <div className={styles.colorPicker}>
       <div
@@ -213,10 +229,19 @@ export default function ColorPicker({ initialColor, onSave }) {
         />
       </div>
       <div className={styles.hexInput}>
-        <div className={styles.colorPreview} />
         <div className={styles.input}>
-          <InputField value={`# ${hexInput.toUpperCase()}`} />
+          <InputField
+            value={`# ${hexInput.toUpperCase()}`}
+            onChange={onHexInputChange}
+            characterLimit={8 /** hex + 2 for hex marker */}
+          />
         </div>
+        <div
+          className={styles.colorPreview}
+          style={{
+            background: `hsl(${currHue}, ${currSaturation}%, ${currLevel}%)`,
+          }}
+        />
       </div>
     </div>
   );
