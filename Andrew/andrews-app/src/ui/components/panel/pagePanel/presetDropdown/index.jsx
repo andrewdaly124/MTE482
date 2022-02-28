@@ -5,11 +5,12 @@ import classNames from "classnames/bind";
 import styles from "./index.module.scss";
 
 import { ReactComponent as ChevronSVG } from "../../../../assets/chevron-down.svg";
+import { ReactComponent as PencilSVG } from "../../../../assets/pencil.svg";
 
 const cx = classNames.bind(styles);
 
 // dropdown for preset editor in pages panel
-export default function PresetDropdown({ number, name }) {
+export default function PresetDropdown({ number, preset }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -17,22 +18,26 @@ export default function PresetDropdown({ number, name }) {
       className={cx({
         [styles.presetDropdown]: true,
       })}
-      style={{ height: open ? "200px" : "48px" }}
+      style={{ height: open ? "200px" : "48px" /** change */ }}
     >
       <div className={styles.colorFilter}>
         <div
           className={styles.header}
           onClick={() => {
-            setOpen(!open);
+            if (preset.description) {
+              setOpen(!open);
+            } else {
+              console.log("edit preset", number);
+            }
           }}
         >
           <div className={styles.number}>{number}</div>
-          <div className={styles.name}>{name}</div>
+          <div className={styles.name}>{preset.name || `Preset ${number}`}</div>
           <div className={styles.chevron}>
-            <ChevronSVG />
+            {preset.description ? <ChevronSVG /> : <PencilSVG />}
           </div>
         </div>
-        <div className={styles.edit}>Edit</div>
+        <div className={styles.edit}>{preset.description}</div>
       </div>
     </div>
   );
@@ -40,5 +45,5 @@ export default function PresetDropdown({ number, name }) {
 
 PresetDropdown.propTypes = {
   number: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
+  preset: PropTypes.object.isRequired,
 };
