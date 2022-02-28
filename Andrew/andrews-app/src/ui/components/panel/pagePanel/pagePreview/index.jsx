@@ -102,6 +102,7 @@ export default function PagePreview() {
               inner={<ColorPickerSVG />}
               onClick={openColorPickerHook}
               size="normal"
+              noPadding
             />
           </div>
         )}
@@ -110,6 +111,7 @@ export default function PagePreview() {
             inner={<RenameSVG />}
             onClick={toggleEditMode}
             size="normal"
+            noPadding
           />
         </div>
       </div>

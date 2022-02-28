@@ -21,6 +21,7 @@ export default function ColorShelf({ onClick }) {
               onClick={() => {
                 onClick(color);
               }}
+              noPadding
             />
           </div>
         );

@@ -1,7 +1,12 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { KeyDownHandler, KeyUpHandler } from "../utils/input_handler";
-import { getIsColorPickerOpen, getCurrentPageColor } from "../store/selectors";
+import {
+  getIsColorPickerOpen,
+  getCurrentPageColor,
+  getCurrentAppState,
+} from "../store/selectors";
+import { APP_STATES } from "../store/reducers/appState";
 
 import MainMenu from "./components/mainMenu";
 import Panel from "./components/panel";
@@ -20,6 +25,7 @@ export default function Ui() {
   // useSelectors
   const isColorPickerOpen = useSelector(getIsColorPickerOpen);
   const currentPageColor = useSelector(getCurrentPageColor);
+  const currentAppState = useSelector(getCurrentAppState);
 
   // useStates
   const [colorPickerStyle, setColorPickerStyle] = useState({});
@@ -28,7 +34,7 @@ export default function Ui() {
   useEffect(() => {
     if (colorPickerRef?.current) {
       const dims = colorPickerRef.current.getBoundingClientRect();
-      if (isColorPickerOpen) {
+      if (currentAppState === APP_STATES.pages && isColorPickerOpen) {
         setColorPickerStyle({
           ...colorPickerStyle,
           top: `${8 /** margin */}px`,
@@ -42,6 +48,7 @@ export default function Ui() {
     isColorPickerOpen,
     leftStackRef,
     colorPickerRef /** again refs wont update */,
+    currentAppState,
   ]);
 
   // Initialize input handlers - Nothing rn

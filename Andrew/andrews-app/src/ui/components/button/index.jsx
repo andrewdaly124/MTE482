@@ -6,7 +6,13 @@ import styles from "./index.module.scss";
 
 const cx = classNames.bind(styles);
 
-export default function Button({ inner, size = "normal", onClick, color }) {
+export default function Button({
+  inner,
+  size = "normal",
+  onClick,
+  color,
+  noPadding = false,
+}) {
   const ref = useRef(null);
   const [explicitStyle, setExplicitStyle] = useState({});
 
@@ -24,6 +30,7 @@ export default function Button({ inner, size = "normal", onClick, color }) {
       className={cx({
         [styles.button]: true,
         [styles[size]]: true,
+        [styles.noPadding]: noPadding,
       })}
       onClick={onClick}
       ref={ref}
@@ -38,8 +45,8 @@ export default function Button({ inner, size = "normal", onClick, color }) {
 
 Button.propTypes = {
   inner: PropTypes.object.isRequired,
-  // color: PropTypes.string.isRequired, // oneOf plz
   size: PropTypes.string.isRequired, // oneOf plz
   onClick: PropTypes.func.isRequired,
   color: PropTypes.string,
+  noPadding: PropTypes.bool,
 };
