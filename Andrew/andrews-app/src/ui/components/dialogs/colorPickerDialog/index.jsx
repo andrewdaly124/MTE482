@@ -2,12 +2,14 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
-import { setPageColor } from "../../../../store/actions";
+import { setPageColor, openColorPicker } from "../../../../store/actions";
 import {
   getCurrentPageNumber,
   getCurrentPage,
   getCurrentPageColor,
+  getCurrentAppState,
 } from "../../../../store/selectors";
+import { APP_STATES } from "../../../../store/reducers/appState";
 
 import ColorPicker from "../../colorPicker";
 
@@ -19,6 +21,7 @@ export default function ColorPickerDialog({ onSave }) {
   const currentPageNumber = useSelector(getCurrentPageNumber);
   const currentPageColor = useSelector(getCurrentPageColor);
   const currentPage = useSelector(getCurrentPage);
+  const currentAppState = useSelector(getCurrentAppState);
   const [initColor, setInitColor] = useState("FFFFFF");
 
   const onSaveHook = useCallback(
@@ -29,9 +32,17 @@ export default function ColorPickerDialog({ onSave }) {
     [currentPage]
   );
 
+  // resets the color state
   useEffect(() => {
     setInitColor(currentPageColor);
   }, [currentPageNumber]);
+
+  // closes if not on page panel
+  useEffect(() => {
+    if (currentAppState !== APP_STATES.pages) {
+      dispatch(openColorPicker(false));
+    }
+  }, [currentAppState]);
 
   return (
     <div className={styles.colorPickerDialog}>
