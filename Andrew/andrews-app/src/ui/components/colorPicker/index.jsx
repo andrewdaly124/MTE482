@@ -77,21 +77,33 @@ export default function ColorPicker({ initialColor, onSave }) {
       const sat = s ?? currSaturation;
       const lev = l ?? currLevel;
 
-      setCurrHue(hue);
-      setCurrSaturation(sat);
-      setCurrLevel(lev);
-
       const rgb = hslToHex(hue, sat, lev).substring(1, 7).toUpperCase();
       onSave(rgb);
     },
     [currHue, currSaturation, currLevel]
   );
 
+  const onStateCallback = useCallback(
+    (h, s, l) => {
+      const hue = h ?? currHue;
+      const sat = s ?? currSaturation;
+      const lev = l ?? currLevel;
+
+      setCurrHue(hue);
+      setCurrSaturation(sat);
+      setCurrLevel(lev);
+    },
+    [currHue, currSaturation, currLevel]
+  );
+
   // Updates UI and sets state if a hex color is selected
   const updateOnExplicitColorSelect = useCallback(
-    (color) => {
+    (color, dontSave = false) => {
       if (!color) {
-        onSaveCallback();
+        if (!dontSave) {
+          onSaveCallback();
+        }
+        onStateCallback();
       } else {
         const hsl = hexToHsl(color);
         const rgb = hexToRgb(color);
@@ -99,10 +111,13 @@ export default function ColorPicker({ initialColor, onSave }) {
         if (rgb.red === rgb.green && rgb.green === rgb.blue) {
           hsl[0] = null;
         }
-        onSaveCallback(...hsl);
+        if (!dontSave) {
+          onSaveCallback(...hsl);
+        }
+        onStateCallback(...hsl);
       }
     },
-    [onSaveCallback]
+    [onSaveCallback, onStateCallback]
   );
 
   // hex Input explicit from hsl
@@ -119,25 +134,24 @@ export default function ColorPicker({ initialColor, onSave }) {
   );
 
   // useEffects
-  useEffect(
-    () => {
-      if (initialColor) {
-        // initial color styles
-        updateOnExplicitColorSelect(initialColor);
-        setHexInput(initialColor.toUpperCase());
-      } else {
-        setHexInput(colorHistory[0]);
-      }
-    },
-    [
-      /** run on start */
-    ]
-  );
+  useEffect(() => {
+    if (initialColor) {
+      // initial color styles
+      updateOnExplicitColorSelect(initialColor, true);
+      setHexInput(initialColor.toUpperCase());
+    } else {
+      setHexInput(colorHistory[0]);
+    }
+  }, [
+    initialColor,
+    /** initialColor dependancy is important for page color picker dialog */
+  ]);
 
   // Extremely desperate event
   useEffect(() => {
     if (badUpdateFlag > 0) {
       /** EW */ onSaveCallback();
+      onStateCallback();
     }
   }, [badUpdateFlag]);
 

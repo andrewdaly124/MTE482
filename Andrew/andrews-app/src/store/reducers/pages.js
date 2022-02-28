@@ -34,6 +34,7 @@ function getDefaultState() {
     }
 
     return {
+      number,
       name: name ?? "",
       description: description ?? "",
       presets: emptyPresets,

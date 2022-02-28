@@ -72,12 +72,10 @@ export default function PagePreview() {
   useEffect(() => {
     if (!isEditMode) {
       dispatch(openColorPicker(false));
-      console.log("closing regardless");
     }
   }, [isEditMode]);
 
   function openColorPickerHook() {
-    console.log(isColorPickerOpen ? "closeing" : "opening");
     dispatch(openColorPicker(!isColorPickerOpen));
   }
 

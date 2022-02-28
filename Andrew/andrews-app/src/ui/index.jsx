@@ -1,15 +1,15 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { KeyDownHandler, KeyUpHandler } from '../utils/input_handler';
-import { getIsColorPickerOpen } from '../store/selectors';
+import React, { useRef, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { KeyDownHandler, KeyUpHandler } from "../utils/input_handler";
+import { getIsColorPickerOpen, getCurrentPageColor } from "../store/selectors";
 
-import MainMenu from './components/mainMenu';
-import Panel from './components/panel';
-import PresetEdit from './components/dialogs/presetEdit';
-import BackgroundAnimation from './components/backgroundAnimation';
-import ColorPickerDialog from './components/dialogs/colorPickerDialog';
+import MainMenu from "./components/mainMenu";
+import Panel from "./components/panel";
+import PresetEdit from "./components/dialogs/presetEdit";
+import BackgroundAnimation from "./components/backgroundAnimation";
+import ColorPickerDialog from "./components/dialogs/colorPickerDialog";
 
-import styles from './index.module.scss';
+import styles from "./index.module.scss";
 
 // Root UI component
 export default function Ui() {
@@ -19,6 +19,7 @@ export default function Ui() {
 
   // useSelectors
   const isColorPickerOpen = useSelector(getIsColorPickerOpen);
+  const currentPageColor = useSelector(getCurrentPageColor);
 
   // useStates
   const [colorPickerStyle, setColorPickerStyle] = useState({});
@@ -27,7 +28,6 @@ export default function Ui() {
   useEffect(() => {
     if (colorPickerRef?.current) {
       const dims = colorPickerRef.current.getBoundingClientRect();
-      console.log(colorPickerStyle);
       if (isColorPickerOpen) {
         setColorPickerStyle({
           ...colorPickerStyle,
@@ -45,11 +45,14 @@ export default function Ui() {
   ]);
 
   // Initialize input handlers - Nothing rn
-  document.addEventListener('keydown', KeyDownHandler);
-  document.addEventListener('keyup', KeyUpHandler);
+  document.addEventListener("keydown", KeyDownHandler);
+  document.addEventListener("keyup", KeyUpHandler);
 
   return (
-    <div className={styles.ui}>
+    <div
+      className={styles.ui}
+      style={{ backgroundColor: `#${currentPageColor}` }}
+    >
       <BackgroundAnimation />
       <div className={styles.leftStack} ref={leftStackRef}>
         <div className={styles.stack}>

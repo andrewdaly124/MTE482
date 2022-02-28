@@ -1,4 +1,4 @@
-@import './palette.module.scss';
+@import "./palette.module.scss";
 
 .ui {
   position: fixed;
@@ -14,14 +14,14 @@
   justify-content: flex-start;
   flex-direction: row;
 
-  background-color: grey; // needs to be dynamic
+  transition: background-color 1s;
 
   color: $PRIMARY;
 
   // Globals
   * {
     transition: background-color 0.2s;
-    font-family: 'Asap', sans-serif;
+    font-family: "Asap", sans-serif;
   }
 
   .leftStack {
