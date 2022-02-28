@@ -1,4 +1,4 @@
-@import "./palette.module.scss";
+@import './palette.module.scss';
 
 .ui {
   position: fixed;
@@ -21,7 +21,7 @@
   // Globals
   * {
     transition: background-color 0.2s;
-    font-family: "Asap", sans-serif;
+    font-family: 'Asap', sans-serif;
   }
 
   .leftStack {
@@ -59,5 +59,10 @@
       flex-direction: column;
       margin-right: 8px;
     }
+  }
+
+  .colorPickerDialog {
+    position: fixed;
+    transition: top 0.4s;
   }
 }
