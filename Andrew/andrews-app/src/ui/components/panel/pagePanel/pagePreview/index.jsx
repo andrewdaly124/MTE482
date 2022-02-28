@@ -3,21 +3,28 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   getCurrentPageNumber,
   getCurrentPage,
+  getIsColorPickerOpen,
 } from "../../../../../store/selectors";
 
-import { setPageName, setPageDescription } from "../../../../../store/actions";
+import {
+  setPageName,
+  setPageDescription,
+  openColorPicker,
+} from "../../../../../store/actions";
 
 import styles from "./index.module.scss";
 
 import Button from "../../../button";
 import InputField from "../../../inputField";
 import { ReactComponent as RenameSVG } from "../../../../assets/rename.svg";
+import { ReactComponent as ColorPickerSVG } from "../../../../assets/color-picker.svg";
 
 // page preview, need edit/save
 export default function PagePreview() {
   const dispatch = useDispatch();
   const currentPageNumber = useSelector(getCurrentPageNumber);
   const currentPage = useSelector(getCurrentPage);
+  const isColorPickerOpen = useSelector(getIsColorPickerOpen);
   const [editEvent, setEditEvent] = useState(0);
   const [isEditMode, setIsEditMode] = useState(true); // immediately toggles to false in useEffect
   const [editName, setEditName] = useState(currentPage.name);
@@ -62,6 +69,18 @@ export default function PagePreview() {
     setIsEditMode(false);
   }, [currentPageNumber]);
 
+  useEffect(() => {
+    if (!isEditMode) {
+      dispatch(openColorPicker(false));
+      console.log("closing regardless");
+    }
+  }, [isEditMode]);
+
+  function openColorPickerHook() {
+    console.log(isColorPickerOpen ? "closeing" : "opening");
+    dispatch(openColorPicker(!isColorPickerOpen));
+  }
+
   return (
     <div className={styles.pagePreview}>
       <div className={styles.header}>
@@ -79,10 +98,19 @@ export default function PagePreview() {
             {currentPage.name || `Page ${currentPageNumber}`}
           </div>
         )}
+        {isEditMode && (
+          <div className={styles.button}>
+            <Button
+              inner={<ColorPickerSVG />}
+              onClick={openColorPickerHook}
+              size="normal"
+            />
+          </div>
+        )}
         <div className={styles.button}>
           <Button
             inner={<RenameSVG />}
-            onClick={() => toggleEditMode()}
+            onClick={toggleEditMode}
             size="normal"
           />
         </div>

@@ -1,5 +1,9 @@
 import { createReducer } from "typesafe-actions";
-import { setCurrentAppState, setColorInHistory } from "../actions";
+import {
+  setCurrentAppState,
+  setColorInHistory,
+  openColorPicker,
+} from "../actions";
 
 export const APP_STATES = { home: 0, pages: 1, bluetooth: 2 };
 export const DEFAULT_COLOR_HISTORY = [
@@ -16,6 +20,7 @@ export const DEFAULT_COLOR_HISTORY = [
 const DEFAULT_STATE = {
   currentAppState: APP_STATES.home,
   colorHistory: DEFAULT_COLOR_HISTORY,
+  colorPickerOpen: false,
 };
 
 const appState = createReducer(DEFAULT_STATE)
@@ -28,6 +33,9 @@ const appState = createReducer(DEFAULT_STATE)
     const newColorHistory = [...state.colorHistory];
     newColorHistory[index] = color;
     return { ...state, colorHistory: newColorHistory };
+  })
+  .handleAction(openColorPicker, (state, { payload }) => {
+    return { ...state, colorPickerOpen: payload };
   });
 
 export default appState;
