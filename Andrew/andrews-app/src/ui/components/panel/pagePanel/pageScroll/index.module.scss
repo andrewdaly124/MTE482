@@ -8,7 +8,7 @@
   overflow: hidden;
 
   .inputContainer {
-    background-color: $GREY7;
+    background-color: $DARKBACKGROUND;
     margin: 0px 8px;
     width: 100%;
     height: 8px;
@@ -29,7 +29,7 @@
     input[type="range"]::-webkit-slider-thumb {
       cursor: pointer;
       -webkit-appearance: none;
-      background-color: $GREY4;
+      background-color: $LIGHTBACKGROUND;
       width: 20px;
       height: 20px;
       border-radius: 10px;

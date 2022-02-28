@@ -7,3 +7,9 @@ import { createAction } from "typesafe-actions";
 
 /** @type { ActionCreator<'SET_CURRENT_APP_STATE'> } */
 export const setCurrentAppState = createAction("SET_CURRENT_APP_STATE")();
+
+/** @type { ActionCreator<'SET_COLOR_IN_HISTORY'> } */
+export const setColorInHistory = createAction("SET_COLOR_IN_HISTORY")();
+
+/** @type { ActionCreator<'OPEN_COLOR_PICKER'> } */
+export const openColorPicker = createAction("OPEN_COLOR_PICKER")();

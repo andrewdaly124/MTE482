@@ -3,21 +3,28 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   getCurrentPageNumber,
   getCurrentPage,
+  getIsColorPickerOpen,
 } from "../../../../../store/selectors";
 
-import { setPageName, setPageDescription } from "../../../../../store/actions";
+import {
+  setPageName,
+  setPageDescription,
+  openColorPicker,
+} from "../../../../../store/actions";
 
 import styles from "./index.module.scss";
 
 import Button from "../../../button";
 import InputField from "../../../inputField";
 import { ReactComponent as RenameSVG } from "../../../../assets/rename.svg";
+import { ReactComponent as ColorPickerSVG } from "../../../../assets/color-picker.svg";
 
 // page preview, need edit/save
 export default function PagePreview() {
   const dispatch = useDispatch();
   const currentPageNumber = useSelector(getCurrentPageNumber);
   const currentPage = useSelector(getCurrentPage);
+  const isColorPickerOpen = useSelector(getIsColorPickerOpen);
   const [editEvent, setEditEvent] = useState(0);
   const [isEditMode, setIsEditMode] = useState(true); // immediately toggles to false in useEffect
   const [editName, setEditName] = useState(currentPage.name);
@@ -62,8 +69,14 @@ export default function PagePreview() {
     setIsEditMode(false);
   }, [currentPageNumber]);
 
-  function onInputFieldChange(e, setter) {
-    setter(e.target.value);
+  useEffect(() => {
+    if (!isEditMode) {
+      dispatch(openColorPicker(false));
+    }
+  }, [isEditMode]);
+
+  function openColorPickerHook() {
+    dispatch(openColorPicker(!isColorPickerOpen));
   }
 
   return (
@@ -72,19 +85,30 @@ export default function PagePreview() {
         {isEditMode ? (
           <InputField
             value={editName}
-            onChange={(e) => onInputFieldChange(e, setEditName)}
-            placeholder="test placeholder"
+            onChange={(val) => setEditName(val)}
+            placeholder={`Page ${currentPageNumber}`}
             autofocus
+            characterLimit={36}
+            size="normal"
           />
         ) : (
           <div className={styles.title}>
             {currentPage.name || `Page ${currentPageNumber}`}
           </div>
         )}
+        {isEditMode && (
+          <div className={styles.button}>
+            <Button
+              inner={<ColorPickerSVG />}
+              onClick={openColorPickerHook}
+              size="normal"
+            />
+          </div>
+        )}
         <div className={styles.button}>
           <Button
             inner={<RenameSVG />}
-            onClick={() => toggleEditMode()}
+            onClick={toggleEditMode}
             size="normal"
           />
         </div>
@@ -94,8 +118,10 @@ export default function PagePreview() {
         <div className={styles.body}>
           <InputField
             value={editDescription}
-            onChange={(e) => onInputFieldChange(e, setEditDescription)}
-            type="textarea"
+            onChange={(val) => setEditDescription(val)}
+            placeholder="Page Description"
+            characterLimit={248}
+            size="paragraphNormal"
           />
         </div>
       ) : currentPage.description ? (

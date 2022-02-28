@@ -5,6 +5,7 @@ import {
   setPageName,
   setPageDescription,
 } from "../actions";
+import { DEFAULT_COLOR_HISTORY } from "./appState";
 
 export const NUMPAGES = 20;
 export const NUMPRESETS = 4; // probably won't change
@@ -26,23 +27,25 @@ function getDefaultState() {
   }
 
   // Empty page preset
-  function newEmptyPage(number, name, description) {
+  function newEmptyPage({ color, number, name, description }) {
     const emptyPresets = [];
     for (let i = 0; i < NUMPRESETS; i++) {
       emptyPresets.push(newEmptyPreset());
     }
 
     return {
-      number: number || 0,
-      name: name || "",
-      description: description || "",
+      number,
+      name: name ?? "",
+      description: description ?? "",
       presets: emptyPresets,
+      color:
+        color ?? DEFAULT_COLOR_HISTORY[number % DEFAULT_COLOR_HISTORY.length],
     };
   }
 
   const emptyPages = [];
   for (let i = 0; i < NUMPAGES; i++) {
-    emptyPages.push(newEmptyPage());
+    emptyPages.push(newEmptyPage({ number: i }));
   }
 
   return { ...DEFAULT_STATE, pages: emptyPages };

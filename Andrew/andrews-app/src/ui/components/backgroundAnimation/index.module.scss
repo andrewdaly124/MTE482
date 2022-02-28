@@ -1,0 +1,76 @@
+@import "../../palette.module.scss";
+
+.firstGradient {
+  z-index: -1;
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    -21deg,
+    $GREY10PHASE1,
+    $GREY10PHASE2,
+    $GREY10PHASE1,
+    $GREY10PHASE2
+  );
+  background-size: 400% 400%;
+  animation: gradient 60s ease infinite;
+
+  .secondGradient {
+    z-index: inherit;
+    position: fixed;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      80deg,
+      $GREY10PHASE1,
+      $GREY10PHASE2,
+      $GREY10PHASE1,
+      $GREY10PHASE2
+    );
+    background-size: 400% 400%;
+    animation: gradient 84s ease infinite;
+
+    .thirdGradient {
+      z-index: inherit;
+      position: fixed;
+      pointer-events: none;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        122deg,
+        $GREY10PHASE1,
+        $GREY10PHASE2,
+        $GREY10PHASE1,
+        $GREY10PHASE2
+      );
+      background-size: 400% 400%;
+      animation: gradient 111s ease infinite;
+    }
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

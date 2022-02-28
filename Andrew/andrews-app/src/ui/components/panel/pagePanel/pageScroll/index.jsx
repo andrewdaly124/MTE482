@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getCurrentPageNumber } from "../../../../../store/selectors";
 import { setCurrentPageNumber } from "../../../../../store/actions";
@@ -13,7 +13,6 @@ import { NUMPAGES } from "../../../../../store/reducers/pages";
 import Button from "../../../button";
 
 export default function PageScroll() {
-  const barRef = useRef(null);
   const dispatch = useDispatch();
   const currentPageNumber = useSelector(getCurrentPageNumber);
 
@@ -30,7 +29,7 @@ export default function PageScroll() {
           dispatch(setCurrentPageNumber(parseInt(currentPageNumber, 10) - 1));
         }}
       />
-      <div className={styles.inputContainer} ref={barRef}>
+      <div className={styles.inputContainer}>
         <input
           type="range"
           min={1}

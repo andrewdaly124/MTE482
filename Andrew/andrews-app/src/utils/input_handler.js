@@ -13,6 +13,7 @@ export function KeyDownHandler(e) {
       // eslint-disable-next-line no-case-declarations
       const reduxTestNumber = getReduxTestNumber(store.getState());
       store.dispatch(setReduxTestNumber(reduxTestNumber + 1));
+      console.log(`global keylogger, onkeydown ${e.key}`);
       break;
   }
 }
@@ -24,6 +25,7 @@ export function KeyUpHandler(e) {
       // eslint-disable-next-line no-case-declarations
       const reduxTestNumber = getReduxTestNumber(store.getState());
       store.dispatch(setReduxTestNumber(reduxTestNumber + 1000));
+      console.log(`global keylogger, onkeyup ${e.key}`);
       break;
   }
 }
