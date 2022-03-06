@@ -1,4 +1,5 @@
 import React from "react";
+import { exportProfile } from "../../../../utils/io";
 
 import Button from "../../button";
 
@@ -26,7 +27,11 @@ export default function HomePanel() {
           <br /> Start from scratch or by importing a current configuration.
         </div>
         <div className={styles.importButton}>
-          <Button inner="Import Existing Configuration" size="normal" />
+          <Button
+            inner="Import Existing Configuration"
+            size="normal"
+            onClick={exportProfile}
+          />
         </div>
       </div>
     </div>

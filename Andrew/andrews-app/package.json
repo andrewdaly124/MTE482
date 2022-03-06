@@ -13,6 +13,7 @@
     "cross-env": "^7.0.3",
     "electron-is-dev": "^2.0.0",
     "eslint-config-airbnb": "^19.0.4",
+    "ftp": "^0.3.10",
     "hex-rgb": "^5.0.0",
     "hex-to-hsl": "^1.0.2",
     "hsl-to-hex": "^1.0.0",

@@ -1,4 +1,5 @@
 import React from "react";
+import { uploadHex } from "../../../../utils/io";
 
 import styles from "./index.module.scss";
 
@@ -16,7 +17,7 @@ export default function PresetEdit() {
         <div className={styles.horizontalLayout}>
           <div className={styles.presetProperties}>
             <div className={styles.filePicker}>
-              <InputField label="File Select" />
+              <input type="file" onChange={uploadHex} accept=".hex" />
             </div>
             <div className={styles.name}>
               <InputField label="Name" />

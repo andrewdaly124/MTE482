@@ -10,3 +10,5 @@ export const getCurrentPage = (state) =>
 
 export const getCurrentPageColor = (state) =>
   state.pages.pages[state.pages.currentPageNumber - 1].color;
+
+export const getPages = (state) => state.pages.pages;
