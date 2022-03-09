@@ -12,7 +12,7 @@ import MainMenu from "./components/mainMenu";
 import Panel from "./components/panel";
 import PresetEdit from "./components/dialogs/presetEdit";
 import BackgroundAnimation from "./components/backgroundAnimation";
-import ColorPickerDialog from "./components/dialogs/colorPickerDialog";
+import ColorPickerPagesDialog from "./components/dialogs/colorPickerPagesDialog";
 
 import styles from "./index.module.scss";
 
@@ -73,7 +73,7 @@ export default function Ui() {
         </div>
       </div>
       <div
-        className={styles.colorPickerDialog}
+        className={styles.colorPickerPagesDialog}
         ref={colorPickerRef}
         style={{
           ...colorPickerStyle,
@@ -82,7 +82,7 @@ export default function Ui() {
           }px`,
         }}
       >
-        <ColorPickerDialog />
+        <ColorPickerPagesDialog />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from "react";
-import { exportProfile } from "../../../../utils/io";
+import { importJson } from "../../../../utils/io";
 
-import Button from "../../button";
+import FileInput from "../../fileInput";
 
 import { ReactComponent as GoogleSVG } from "../../../assets/google.svg";
 
@@ -11,14 +11,10 @@ import styles from "./index.module.scss";
 export default function HomePanel() {
   return (
     <div className={styles.homePanel}>
-      {/*
-      <div className={styles.title}>Home</div>
-    */}
       <div className={styles.inner}>
         <div className={styles.logo}>
           <GoogleSVG />
         </div>
-
         <div className={styles.header}>Welcome to Corda!</div>
         <div className={styles.intro}>
           From choosing effects, to plugging them in and playing live, Corda
@@ -27,10 +23,10 @@ export default function HomePanel() {
           <br /> Start from scratch or by importing a current configuration.
         </div>
         <div className={styles.importButton}>
-          <Button
+          <FileInput
             inner="Import Existing Configuration"
-            size="normal"
-            onClick={exportProfile}
+            onChange={importJson}
+            accept=".json"
           />
         </div>
       </div>

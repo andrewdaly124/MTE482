@@ -4,6 +4,11 @@ import {
   setPageColor,
   setPageName,
   setPageDescription,
+  setCurrentPresetNumber,
+  setPresetFile,
+  setPresetColor,
+  setPresetDescription,
+  setPresetName,
 } from "../actions";
 import { DEFAULT_COLOR_HISTORY } from "./appState";
 
@@ -13,13 +18,14 @@ export const NUMPRESETS = 4; // probably won't change
 const DEFAULT_STATE = {
   pages: [],
   currentPageNumber: 1,
+  currentPresetNumber: 1,
 };
 
 function getDefaultState() {
   // Empty effect preset
   function newEmptyPreset(file, name, description, color) {
     return {
-      file: file || {},
+      file: file || "",
       name: name || "",
       description: description || "",
       color: color || "",
@@ -74,6 +80,41 @@ const pages = createReducer(getDefaultState())
   .handleAction(setPageColor, (state, { payload: { index, newColor } }) => {
     const pagesCopy = [...state.pages];
     pagesCopy[index].color = newColor;
+    return { ...state, pages: pagesCopy };
+  })
+  .handleAction(setCurrentPresetNumber, (state, { payload }) => {
+    if (payload >= 1 && payload <= NUMPRESETS) {
+      return { ...state, currentPresetNumber: payload };
+    }
+    return { ...state };
+  })
+  .handleAction(setPresetFile, (state, { payload }) => {
+    const pagesCopy = [...state.pages];
+    pagesCopy[state.currentPageNumber - 1].presets[
+      state.currentPresetNumber - 1
+    ].file = payload;
+    return { ...state, pages: pagesCopy };
+  })
+  .handleAction(setPresetName, (state, { payload }) => {
+    const pagesCopy = [...state.pages];
+    pagesCopy[state.currentPageNumber - 1].presets[
+      state.currentPresetNumber - 1
+    ].name = payload;
+    console.log(pagesCopy);
+    return { ...state, pages: pagesCopy };
+  })
+  .handleAction(setPresetDescription, (state, { payload }) => {
+    const pagesCopy = [...state.pages];
+    pagesCopy[state.currentPageNumber - 1].presets[
+      state.currentPresetNumber - 1
+    ].description = payload;
+    return { ...state, pages: pagesCopy };
+  })
+  .handleAction(setPresetColor, (state, { payload }) => {
+    const pagesCopy = [...state.pages];
+    pagesCopy[state.currentPageNumber - 1].presets[
+      state.currentPresetNumber - 1
+    ].color = payload;
     return { ...state, pages: pagesCopy };
   });
 

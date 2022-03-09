@@ -13,3 +13,6 @@ export const setColorInHistory = createAction("SET_COLOR_IN_HISTORY")();
 
 /** @type { ActionCreator<'OPEN_COLOR_PICKER'> } */
 export const openColorPicker = createAction("OPEN_COLOR_PICKER")();
+
+/** @type { ActionCreator<'RESHUFFLE_UID'> } */
+export const reshuffleUid = createAction("RESHUFFLE_UID")();

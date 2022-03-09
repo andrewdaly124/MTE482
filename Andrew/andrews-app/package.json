@@ -17,6 +17,7 @@
     "hex-rgb": "^5.0.0",
     "hex-to-hsl": "^1.0.2",
     "hsl-to-hex": "^1.0.0",
+    "invert-color": "^2.0.0",
     "path": "^0.12.7",
     "prettier": "^2.5.1",
     "prop-types": "^15.8.1",

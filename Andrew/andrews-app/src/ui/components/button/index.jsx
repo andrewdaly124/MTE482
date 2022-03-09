@@ -44,8 +44,8 @@ export default function Button({
 }
 
 Button.propTypes = {
-  inner: PropTypes.object.isRequired,
-  size: PropTypes.string.isRequired, // oneOf plz
+  inner: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
+  size: PropTypes.string, // default normal
   onClick: PropTypes.func.isRequired,
   color: PropTypes.string,
   noPadding: PropTypes.bool,
