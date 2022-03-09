@@ -50,8 +50,8 @@ int effectCounter = 1;
 
 // ESP-NOW shit
 // put in the processor MAC address here
-// uint8_t broadcastMACAddress[] = {0x0C, 0xDC, 0x7E, 0x3D, 0xA1, 0x1C};
-uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x41, 0xF4};
+uint8_t broadcastMACAddress[] = {0x0C, 0xDC, 0x7E, 0x3D, 0xA1, 0x1C};
+// uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x41, 0xF4};
 
 // Define the variables that will store the data that is to be sent
 char effectName[32] = "FROM INTERFACE";
@@ -214,7 +214,9 @@ void loop() {
     
     sendReading();
   }*/
-  printDisplay();
+
+  printUI();
+  //printDisplay();
   ifButtonPressed();
   GarbageEncoderCheck();
   // loopCount ++;
@@ -268,7 +270,7 @@ void printDisplay()
   display.setCursor(42,0);
   display.println("EFFECTS");
   display.drawRoundRect(8, 10, 112, 8, 2, WHITE);
-  display.fillRoundRect(8, 10, counter, 8, 2, WHITE);
+  display.fillRoundRect(8, 10, min(counter/2, 112), 8, 2, WHITE);
   display.setCursor(7,24);
   display.print("1");
   display.setCursor(42, 24);
@@ -278,6 +280,54 @@ void printDisplay()
   display.setCursor(114, 24);
   display.print("4");
   display.display();
+}
+
+void printUI()
+{
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  printConnectivitySignal();
+  printBatterySymbol(112, 3);
+  centreText("SET NAME", 0);
+  centreText("EFFECT NAME #1", 12);
+  display.setCursor(6,23);
+  display.fillRoundRect(4, 22, 7, 9, 2, WHITE);
+  display.setTextColor(BLACK);
+  display.print("1");
+  display.setTextColor(WHITE);
+  display.setCursor(42, 23);
+  display.print("2");
+  display.setCursor(78, 23);
+  display.print("3");
+  display.setCursor(114, 23);
+  display.print("4");
+  display.display();
+}
+
+void printConnectivitySignal()
+{
+  // X symbol
+  display.drawLine(2, 2, 6, 6, WHITE);
+  display.drawLine(2, 6, 6, 2, WHITE);
+
+  // Checkmark symbol
+  display.drawLine(2+8, 5, 3+8, 6, WHITE);
+  display.drawLine(3+8, 6, 7+8, 2, WHITE);
+}
+
+void printBatterySymbol(int x, int y)
+{
+  display.drawLine(x, y, x, y+1, WHITE);
+  display.drawRoundRect(x+1, y-2, 11, 6, 1, WHITE);
+}
+
+void centreText(String words, int height)
+{
+  int l = words.length();
+
+  display.setCursor((126-(l*6))/2+1, height);
+  display.println(words);
 }
 
 void toggleLed()

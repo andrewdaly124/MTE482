@@ -51,8 +51,8 @@ int effectCounter = 1;
 
 // ESP-NOW shit
 // put in the interface MAC address here
-// uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x3B, 0x78};
-uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x45, 0xE4};
+uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x3B, 0x78};
+// uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x45, 0xE4};
 
 // Define the variables that will store the data that is to be sent
 char effectName[32] = "FROM PROCESSOR";
