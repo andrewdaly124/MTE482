@@ -35,3 +35,8 @@ export const getCurrentPresetFile = (state) =>
   state.pages.pages[state.pages.currentPageNumber - 1].presets[
     state.pages.currentPresetNumber - 1
   ].file;
+
+export const getCurrentPresetPots = (state) =>
+  state.pages.pages[state.pages.currentPageNumber - 1].presets[
+    state.pages.currentPresetNumber - 1
+  ].pots;

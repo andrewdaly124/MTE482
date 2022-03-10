@@ -9,11 +9,16 @@ import {
   setPresetColor,
   setPresetDescription,
   setPresetName,
+  setPotName,
 } from "../actions";
 import { DEFAULT_COLOR_HISTORY } from "./appState";
 
 export const NUMPAGES = 20;
 export const NUMPRESETS = 4; // probably won't change
+export const NUMPOTS = 3;
+
+export const MAX_NAME_LENGTH = 36;
+export const MAX_DESCRIPTION_LENGTH = 248;
 
 const DEFAULT_STATE = {
   pages: [],
@@ -22,13 +27,26 @@ const DEFAULT_STATE = {
 };
 
 function getDefaultState() {
+  // Empty pot
+  function newEmptyPot(name) {
+    return {
+      name: name || "",
+    };
+  }
+
   // Empty effect preset
   function newEmptyPreset(file, name, description, color) {
+    const emptyPots = [];
+    for (let i = 0; i < NUMPOTS; i++) {
+      emptyPots.push(newEmptyPot());
+    }
+
     return {
       file: file || "",
       name: name || "",
       description: description || "",
       color: color || "",
+      pots: emptyPots,
     };
   }
 
@@ -114,6 +132,13 @@ const pages = createReducer(getDefaultState())
     pagesCopy[state.currentPageNumber - 1].presets[
       state.currentPresetNumber - 1
     ].color = payload;
+    return { ...state, pages: pagesCopy };
+  })
+  .handleAction(setPotName, (state, { payload: { name, index } }) => {
+    const pagesCopy = [...state.pages];
+    pagesCopy[state.currentPageNumber - 1].presets[
+      state.currentPresetNumber - 1
+    ].pots[index].name = name;
     return { ...state, pages: pagesCopy };
   });
 
