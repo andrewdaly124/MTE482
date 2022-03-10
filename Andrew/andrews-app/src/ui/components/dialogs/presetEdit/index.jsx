@@ -36,7 +36,6 @@ export default function PresetEdit() {
   // useCallbacks
   const onSaveColor = useCallback(
     (color) => {
-      console.log("presetEdit", color);
       dispatch(setPresetColor(color));
     },
     [setPresetColor]
@@ -61,7 +60,6 @@ export default function PresetEdit() {
   // useEffects
   useEffect(() => {
     const newPreset = currentPage.presets[currentPresetNumber - 1];
-    console.log(newPreset);
     setFileName(newPreset.file || "");
     setInputName(newPreset.name || "");
     setInputDescription(newPreset.description || "");

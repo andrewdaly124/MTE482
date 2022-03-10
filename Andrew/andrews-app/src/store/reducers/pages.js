@@ -100,7 +100,6 @@ const pages = createReducer(getDefaultState())
     pagesCopy[state.currentPageNumber - 1].presets[
       state.currentPresetNumber - 1
     ].name = payload;
-    console.log(pagesCopy);
     return { ...state, pages: pagesCopy };
   })
   .handleAction(setPresetDescription, (state, { payload }) => {

@@ -49,7 +49,6 @@ export default function PresetDropdown({ number, preset }) {
     let openOrClose;
 
     if (currPresetNumber === number) {
-      console.log("is the same");
       openOrClose = !isPresetEditorOpen;
     } else {
       openOrClose = true;

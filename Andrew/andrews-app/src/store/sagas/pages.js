@@ -6,7 +6,6 @@ import {
 } from "../actions";
 
 function* resetPresetState() {
-  console.log("should call");
   yield put(setCurrentPresetNumber(1));
   yield put(openPresetEditor(false));
 }
