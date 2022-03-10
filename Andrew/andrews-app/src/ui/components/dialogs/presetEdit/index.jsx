@@ -2,6 +2,10 @@ import React, { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { importHex } from "../../../../utils/io";
 import {
+  MAX_NAME_LENGTH,
+  MAX_DESCRIPTION_LENGTH,
+} from "../../../../store/reducers/pages";
+import {
   getCurrentPage,
   getCurrentPageNumber,
   getCurrentPresetNumber,
@@ -17,6 +21,7 @@ import {
   setPresetDescription,
   setPresetName,
   setPresetFile,
+  setPotName,
 } from "../../../../store/actions";
 
 export default function PresetEdit() {
@@ -30,6 +35,11 @@ export default function PresetEdit() {
   // useStates
   const [inputName, setInputName] = useState("");
   const [inputDescription, setInputDescription] = useState("");
+  const [inputPots, setInputPots] = useState([
+    { name: "" },
+    { name: "" },
+    { name: "" },
+  ]);
   const [fileName, setFileName] = useState("");
   const [initColor, setInitColor] = useState("");
 
@@ -41,21 +51,40 @@ export default function PresetEdit() {
     [setPresetColor]
   );
 
-  const onChangeInputName = useCallback((val) => {
-    setInputName(val);
-    dispatch(setPresetName(val));
-  }, []);
+  const onChangeInputName = useCallback(
+    (val) => {
+      setInputName(val);
+      dispatch(setPresetName(val));
+    },
+    [inputName]
+  );
 
-  const onChangeInputDescription = useCallback((val) => {
-    setInputDescription(val);
-    dispatch(setPresetDescription(val));
-  }, []);
+  const onChangeInputDescription = useCallback(
+    (val) => {
+      setInputDescription(val);
+      dispatch(setPresetDescription(val));
+    },
+    [inputDescription]
+  );
 
-  const onSelectFile = useCallback((e) => {
-    const val = importHex(e);
-    setFileName(val);
-    dispatch(setPresetFile(val));
-  }, []);
+  const onChangeInputPots = useCallback(
+    (index, val) => {
+      const newPots = [...inputPots];
+      newPots[index].name = val;
+      setInputPots(newPots);
+      dispatch(setPotName({ name: val, index }));
+    },
+    [inputPots]
+  );
+
+  const onSelectFile = useCallback(
+    (e) => {
+      const val = importHex(e);
+      setFileName(val);
+      dispatch(setPresetFile(val));
+    },
+    [fileName]
+  );
 
   // useEffects
   useEffect(() => {
@@ -64,6 +93,7 @@ export default function PresetEdit() {
     setInputName(newPreset.name || "");
     setInputDescription(newPreset.description || "");
     setInitColor(newPreset.color || "FFFFFF");
+    setInputPots(newPreset.pots || [{ name: "" }, { name: "" }, { name: "" }]);
   }, [currentPageNumber, currentPage, currentPresetNumber]);
 
   return (
@@ -83,18 +113,38 @@ export default function PresetEdit() {
                 label="Name"
                 value={inputName}
                 onChange={onChangeInputName}
-                placeholder="Preset Name (change plz)"
-                characterLimit={248}
+                placeholder={`Preset ${currentPresetNumber} Name`}
+                characterLimit={MAX_NAME_LENGTH}
               />
             </div>
             <div className={styles.description}>
               <InputField
                 label="Description"
                 size="infinite"
-                placeholder="Preset Description (change plz)"
+                placeholder="Preset Description"
                 value={inputDescription}
                 onChange={onChangeInputDescription}
-                characterLimit={248}
+                characterLimit={MAX_DESCRIPTION_LENGTH}
+              />
+            </div>
+            <div className={styles.pots}>
+              <InputField
+                label="Potentiometer 1"
+                value={inputPots[0].name}
+                onChange={(val) => onChangeInputPots(0, val)}
+                characterLimit={MAX_NAME_LENGTH}
+              />
+              <InputField
+                label="Potentiometer 2"
+                value={inputPots[1].name}
+                onChange={(val) => onChangeInputPots(1, val)}
+                characterLimit={MAX_NAME_LENGTH}
+              />
+              <InputField
+                label="Potentiometer 3"
+                value={inputPots[2].name}
+                onChange={(val) => onChangeInputPots(2, val)}
+                characterLimit={MAX_NAME_LENGTH}
               />
             </div>
           </div>

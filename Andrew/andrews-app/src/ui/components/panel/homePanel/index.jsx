@@ -9,12 +9,15 @@ import styles from "./index.module.scss";
 
 // home panel inner
 export default function HomePanel() {
+  const ALLOW_LOGO = false;
   return (
     <div className={styles.homePanel}>
       <div className={styles.inner}>
-        <div className={styles.logo}>
-          <GoogleSVG />
-        </div>
+        {ALLOW_LOGO && (
+          <div className={styles.logo}>
+            <GoogleSVG />
+          </div>
+        )}
         <div className={styles.header}>Welcome to Corda!</div>
         <div className={styles.intro}>
           From choosing effects, to plugging them in and playing live, Corda

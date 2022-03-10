@@ -16,8 +16,14 @@
   }
 
   .inner {
-    font-size: 14px;
+    font-size: 16px;
     color: $GREY3;
+    text-align: center;
     margin: 8px 0px;
+  }
+
+  .importButton {
+    margin-top: 8px;
+    width: auto;
   }
 }

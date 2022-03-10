@@ -34,4 +34,7 @@ export const setPresetDescription = createAction("SET_PRESET_DESCRIPTION")();
 /** @type { ActionCreator<'SET_PRESET_COLOR'> } */
 export const setPresetColor = createAction("SET_PRESET_COLOR")();
 
+/** @type { ActionCreator<'SET_POT_NAME'> } */
+export const setPotName = createAction("SET_POT_NAME")();
+
 // add page editing actions

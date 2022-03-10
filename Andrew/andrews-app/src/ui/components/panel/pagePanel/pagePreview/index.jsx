@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  MAX_DESCRIPTION_LENGTH,
+  MAX_NAME_LENGTH,
+} from "../../../../../store/reducers/pages";
+import {
   getCurrentPageNumber,
   getCurrentPage,
   getIsColorPickerOpen,
 } from "../../../../../store/selectors";
-
 import {
   setPageName,
   setPageDescription,
@@ -88,7 +91,7 @@ export default function PagePreview() {
             onChange={(val) => setEditName(val)}
             placeholder={`Page ${currentPageNumber}`}
             autofocus
-            characterLimit={36}
+            characterLimit={MAX_NAME_LENGTH}
             size="normal"
           />
         ) : (
@@ -122,7 +125,7 @@ export default function PagePreview() {
             value={editDescription}
             onChange={(val) => setEditDescription(val)}
             placeholder="Page Description"
-            characterLimit={248}
+            characterLimit={MAX_DESCRIPTION_LENGTH}
             size="paragraphNormal"
           />
         </div>
