@@ -69,12 +69,9 @@ export default function PresetDropdown({ number, preset }) {
     }
   }, [open, onEditPreset]);
 
-  useEffect(() => {}, [
-    currPresetName,
-    currPresetDescription,
-    currPresetColor,
-    currPresetFile,
-  ]);
+  useEffect(() => {
+    // Just need the component update
+  }, [currPresetName, currPresetDescription, currPresetColor, currPresetFile]);
 
   return (
     <div

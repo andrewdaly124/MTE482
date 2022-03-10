@@ -14,6 +14,7 @@ import Panel from "./components/panel";
 import PresetEdit from "./components/dialogs/presetEdit";
 import BackgroundAnimation from "./components/backgroundAnimation";
 import ColorPickerPagesDialog from "./components/dialogs/colorPickerPagesDialog";
+import Device from "./components/device";
 
 import styles from "./index.module.scss";
 
@@ -33,6 +34,7 @@ export default function Ui() {
   // useStates
   const [colorPickerStyle, setColorPickerStyle] = useState({});
   const [presetEditorStyle, setPresetEditorStyle] = useState({});
+  const [deviceStyle, setDeviceStyle] = useState({});
 
   // useEffect
   // color picker dialog
@@ -61,14 +63,26 @@ export default function Ui() {
     if (presetEditorRef?.current) {
       const dims = presetEditorRef.current.getBoundingClientRect();
       if (currentAppState === APP_STATES.pages && isPresetEditorOpen) {
+        // Open
         setPresetEditorStyle({
           ...presetEditorStyle,
           bottom: `${8 /** margin */}px`,
         });
+        setDeviceStyle({
+          ...deviceStyle,
+          top: "88px",
+          transform: "rotate(0deg)",
+        });
       } else {
+        // Closed
         setPresetEditorStyle({
           ...presetEditorStyle,
           bottom: `${-dims.height}px`,
+        });
+        setDeviceStyle({
+          ...deviceStyle,
+          top: "281px",
+          transform: "rotate(90deg)",
         });
       }
     }
@@ -95,6 +109,14 @@ export default function Ui() {
           <MainMenu />
         </div>
         <Panel />
+      </div>
+      <div
+        className={styles.device}
+        style={{
+          ...deviceStyle,
+        }}
+      >
+        <Device />
       </div>
       <div
         className={styles.colorPickerPagesDialog}

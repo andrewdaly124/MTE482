@@ -42,6 +42,13 @@
     }
   }
 
+  .device {
+    position: fixed;
+    left: 513px;
+    transition: all 0.4s;
+    transform: rotate(90deg);
+  }
+
   .colorPickerPagesDialog {
     position: fixed;
     transition: top 0.4s;

@@ -63,7 +63,7 @@ export default function PresetEdit() {
     setFileName(newPreset.file || "");
     setInputName(newPreset.name || "");
     setInputDescription(newPreset.description || "");
-    setInitColor(newPreset.color);
+    setInitColor(newPreset.color || "FFFFFF");
   }, [currentPageNumber, currentPage, currentPresetNumber]);
 
   return (
