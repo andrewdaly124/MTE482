@@ -97,7 +97,11 @@ export default function PresetDropdown({ number, preset }) {
         className={styles.colorFilter}
         style={preset.color ? { backgroundColor: `#${preset.color}` } : {}}
       >
-        <div className={styles.header} onClick={onClickHeader}>
+        <div
+          className={styles.header}
+          onClick={onClickHeader}
+          title={preset.name || `Preset ${number}`}
+        >
           <div className={styles.number}>{number}</div>
           <div
             className={styles.name}
