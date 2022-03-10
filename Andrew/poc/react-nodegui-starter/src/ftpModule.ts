@@ -25,6 +25,7 @@ export function handlePagesInput(e: string) {
 export function saveNewProfile() {
   const pagesJson = JSON.stringify(pages);
   fs.writeFile(PATH + "profile.json", pagesJson, () => {});
+  console.log("Saved new profile (profile/profile.json)");
 }
 
 function verifyPage(page: any) {
@@ -94,16 +95,13 @@ export function initiateFtp() {
   ftpUploadProfile(); // upload profile json
 
   for (let i = 0; i < pagesToSend.length; i++) {
-    console.log("Attempting to process page " + i);
     const presets = pagesToSend[i].presets;
 
     for (let j = 0; j < presets.length; j++) {
-      console.log("Attempting to process preset " + i + " : " + j);
+      console.log("Invoked transfer promise for '" + presets[j].file + "'");
       ftpUploadPreset(presets[j]);
     }
   }
-
-  console.log("Done!");
 }
 
 function ftpUploadProfile() {
