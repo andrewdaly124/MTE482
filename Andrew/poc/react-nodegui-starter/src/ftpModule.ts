@@ -91,12 +91,14 @@ export function initiateFtp() {
   fs.writeFile(PATH + "transferProfile.json", transferJson, () => {});
 
   console.log("Beginning Transfer!");
-  ftpUploadProfile(); //upload profile json
+  ftpUploadProfile(); // upload profile json
 
   for (let i = 0; i < pagesToSend.length; i++) {
+    console.log("Attempting to process page " + i);
     const presets = pagesToSend[i].presets;
 
     for (let j = 0; j < presets.length; j++) {
+      console.log("Attempting to process preset " + i + " : " + j);
       ftpUploadPreset(presets[j]);
     }
   }

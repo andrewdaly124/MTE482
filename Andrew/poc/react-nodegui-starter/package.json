@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@nodegui/react-nodegui": "^0.10.2",
+    "ftp": "^0.3.10",
     "open": "^7.2.1",
     "react": "^16.13.1"
   },
