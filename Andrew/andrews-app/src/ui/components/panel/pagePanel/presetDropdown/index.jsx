@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import classNames from "classnames/bind";
 import invert from "invert-color";
@@ -15,7 +15,13 @@ import {
   getCurrentPresetDescription,
   getCurrentPresetFile,
   getCurrentPresetName,
-} from "../../../../../store/selectors/pages";
+  getCurrentPresetNumber,
+  getIsPresetEditorOpen,
+} from "../../../../../store/selectors";
+import {
+  openPresetEditor,
+  setCurrentPresetNumber,
+} from "../../../../../store/actions";
 
 const cx = classNames.bind(styles);
 
@@ -26,18 +32,35 @@ export default function PresetDropdown({ number, preset }) {
   const NAME_FIELD_MARGIN = 16;
 
   // react-redux
+  const currPresetNumber = useSelector(getCurrentPresetNumber);
   const currPresetName = useSelector(getCurrentPresetName);
   const currPresetDescription = useSelector(getCurrentPresetDescription);
   const currPresetColor = useSelector(getCurrentPresetColor);
   const currPresetFile = useSelector(getCurrentPresetFile);
+  const isPresetEditorOpen = useSelector(getIsPresetEditorOpen);
+
+  const dispatch = useDispatch();
 
   // useState
   const [open, setOpen] = useState(false);
 
   // useCallback
   const onEditPreset = useCallback(() => {
-    console.log("edit preset");
-  }, []);
+    let openOrClose;
+
+    if (currPresetNumber === number) {
+      console.log("is the same");
+      openOrClose = !isPresetEditorOpen;
+    } else {
+      openOrClose = true;
+    }
+
+    dispatch(openPresetEditor(openOrClose));
+
+    if (openOrClose === true) {
+      dispatch(setCurrentPresetNumber(number));
+    }
+  }, [currPresetNumber, isPresetEditorOpen]);
 
   const onClickHeader = useCallback(() => {
     if (preset.description) {
@@ -45,7 +68,7 @@ export default function PresetDropdown({ number, preset }) {
     } else {
       onEditPreset();
     }
-  }, [open]);
+  }, [open, onEditPreset]);
 
   useEffect(() => {}, [
     currPresetName,
@@ -107,7 +130,14 @@ export default function PresetDropdown({ number, preset }) {
           <div className={styles.edit}>
             {preset.description}
             <div className={styles.button}>
-              <Button inner="Edit Preset" onClick={onEditPreset} />
+              <Button
+                inner={
+                  currPresetNumber === number && isPresetEditorOpen
+                    ? "Close Editor"
+                    : "Edit Preset"
+                }
+                onClick={onEditPreset}
+              />
             </div>
           </div>
         )}

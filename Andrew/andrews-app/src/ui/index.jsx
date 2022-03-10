@@ -5,6 +5,7 @@ import {
   getIsColorPickerOpen,
   getCurrentPageColor,
   getCurrentAppState,
+  getIsPresetEditorOpen,
 } from "../store/selectors";
 import { APP_STATES } from "../store/reducers/appState";
 
@@ -21,16 +22,20 @@ export default function Ui() {
   // useRefs
   const leftStackRef = useRef(null);
   const colorPickerRef = useRef(null);
+  const presetEditorRef = useRef(null);
 
   // useSelectors
   const isColorPickerOpen = useSelector(getIsColorPickerOpen);
+  const isPresetEditorOpen = useSelector(getIsPresetEditorOpen);
   const currentPageColor = useSelector(getCurrentPageColor);
   const currentAppState = useSelector(getCurrentAppState);
 
   // useStates
   const [colorPickerStyle, setColorPickerStyle] = useState({});
+  const [presetEditorStyle, setPresetEditorStyle] = useState({});
 
   // useEffect
+  // color picker dialog
   useEffect(() => {
     if (colorPickerRef?.current) {
       const dims = colorPickerRef.current.getBoundingClientRect();
@@ -51,6 +56,30 @@ export default function Ui() {
     currentAppState,
   ]);
 
+  // preset editor dialog
+  useEffect(() => {
+    if (presetEditorRef?.current) {
+      const dims = presetEditorRef.current.getBoundingClientRect();
+      if (currentAppState === APP_STATES.pages && isPresetEditorOpen) {
+        setPresetEditorStyle({
+          ...presetEditorStyle,
+          bottom: `${8 /** margin */}px`,
+        });
+      } else {
+        setPresetEditorStyle({
+          ...presetEditorStyle,
+          bottom: `${-dims.height}px`,
+        });
+      }
+    }
+    // eslint-disable-next-line array-bracket-spacing
+  }, [
+    isPresetEditorOpen,
+    leftStackRef,
+    presetEditorRef /** again refs wont update */,
+    currentAppState,
+  ]);
+
   // Initialize input handlers - Nothing rn
   document.addEventListener("keydown", KeyDownHandler);
   document.addEventListener("keyup", KeyUpHandler);
@@ -67,11 +96,6 @@ export default function Ui() {
         </div>
         <Panel />
       </div>
-      <div className={styles.rightStack}>
-        <div className={styles.stack}>
-          <PresetEdit />
-        </div>
-      </div>
       <div
         className={styles.colorPickerPagesDialog}
         ref={colorPickerRef}
@@ -83,6 +107,18 @@ export default function Ui() {
         }}
       >
         <ColorPickerPagesDialog />
+      </div>
+      <div
+        className={styles.presetEditorDialog}
+        ref={presetEditorRef}
+        style={{
+          ...presetEditorStyle,
+          left: `${
+            leftStackRef?.current?.getBoundingClientRect().right /** sucks */
+          }px`,
+        }}
+      >
+        <PresetEdit />
       </div>
     </div>
   );

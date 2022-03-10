@@ -42,27 +42,14 @@
     }
   }
 
-  .rightStack {
-    height: calc(100% - 16px);
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-direction: column;
-    padding: 8px;
-
-    .stack {
-      height: auto;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      margin-right: 8px;
-    }
-  }
-
   .colorPickerPagesDialog {
     position: fixed;
     transition: top 0.4s;
+  }
+
+  .presetEditorDialog {
+    position: fixed;
+    transition: bottom 0.4s;
+    width: 672px; // 1100 - 404 - 8 * 3
   }
 }
