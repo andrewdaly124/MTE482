@@ -1,5 +1,6 @@
 import store from "../store";
 import { getPages } from "../store/selectors";
+import copyToClipboard from "./copyToClipboard";
 
 export function importJson(e) {
   if (e?.target?.files) {
@@ -26,7 +27,6 @@ export function importHex(e) {
 
 export function exportProfile() {
   const pages = getPages(store.getState());
-  console.log("export", pages);
-  // const json = JSON.stringify(pages);
-  // fs.writeFile("myjsonfile.json", json);
+  const pagesJson = JSON.stringify(pages);
+  copyToClipboard(pagesJson);
 }
