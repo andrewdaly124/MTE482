@@ -1,5 +1,6 @@
 import store from "../store";
 import { getPages } from "../store/selectors";
+import { setPagesExplicit } from "../store/actions";
 import copyToClipboard from "./copyToClipboard";
 
 export function importJson(e) {
@@ -8,7 +9,7 @@ export function importJson(e) {
 
     reader.onload = function () {
       const pagesRead = JSON.parse(reader.result);
-      console.log("import", pagesRead);
+      store.dispatch(setPagesExplicit(pagesRead));
     };
 
     reader.readAsBinaryString(e?.target?.files[0]);

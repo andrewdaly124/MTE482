@@ -10,6 +10,7 @@ import {
   setPresetDescription,
   setPresetName,
   setPotName,
+  setPagesExplicit,
 } from "../actions";
 import { DEFAULT_COLOR_HISTORY } from "./appState";
 
@@ -105,6 +106,9 @@ const pages = createReducer(getDefaultState())
       return { ...state, currentPresetNumber: payload };
     }
     return { ...state };
+  })
+  .handleAction(setPagesExplicit, (state, { payload }) => {
+    return { ...state, pages: payload };
   })
   .handleAction(setPresetFile, (state, { payload }) => {
     const pagesCopy = [...state.pages];

@@ -5,6 +5,9 @@ import { createAction } from "typesafe-actions";
  *  - Add payload types
  */
 
+/** @type { ActionCreator<'SET_PAGES_EXPLICIT'> } */
+export const setPagesExplicit = createAction("SET_PAGES_EXPLICIT")();
+
 /** @type { ActionCreator<'SET_CURRENT_PAGE_NUMBER'> } */
 export const setCurrentPageNumber = createAction("SET_CURRENT_PAGE_NUMBER")();
 

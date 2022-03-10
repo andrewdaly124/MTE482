@@ -105,7 +105,7 @@ export default function PresetEdit() {
               <FileInput
                 inner={fileName || "Click to Import Effect File"}
                 onChange={onSelectFile}
-                accept=".hex"
+                accept=".h"
               />
             </div>
             <div className={styles.name}>
