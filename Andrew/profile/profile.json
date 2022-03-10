@@ -1,0 +1,722 @@
+[
+  {
+    "number": 0,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "testHexFile.hex",
+        "name": "This one is good, maybe",
+        "description": "Ths one has a valid description",
+        "color": "E5CDCD",
+        "pots": [{ "name": "Pot 1" }, { "name": "Pot 2" }, { "name": "Pot 3" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "E8E4D9",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "D1E6D6",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "D1D6E6",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "A0CADE"
+  },
+  {
+    "number": 1,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "FF0000"
+  },
+  {
+    "number": 2,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "FFBF00"
+  },
+  {
+    "number": 3,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "00FF40"
+  },
+  {
+    "number": 4,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "00FFFF"
+  },
+  {
+    "number": 5,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "0040FF"
+  },
+  {
+    "number": 6,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "8000FF"
+  },
+  {
+    "number": 7,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "FF00BF"
+  },
+  {
+    "number": 8,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "FFFFFF"
+  },
+  {
+    "number": 9,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "FF0000"
+  },
+  {
+    "number": 10,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "FFBF00"
+  },
+  {
+    "number": 11,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "00FF40"
+  },
+  {
+    "number": 12,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "00FFFF"
+  },
+  {
+    "number": 13,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "0040FF"
+  },
+  {
+    "number": 14,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "8000FF"
+  },
+  {
+    "number": 15,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "FF00BF"
+  },
+  {
+    "number": 16,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "FFFFFF"
+  },
+  {
+    "number": 17,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "FF0000"
+  },
+  {
+    "number": 18,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "FFBF00"
+  },
+  {
+    "number": 19,
+    "name": "",
+    "description": "",
+    "presets": [
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      },
+      {
+        "file": "",
+        "name": "",
+        "description": "",
+        "color": "",
+        "pots": [{ "name": "" }, { "name": "" }, { "name": "" }]
+      }
+    ],
+    "color": "00FF40"
+  }
+]
