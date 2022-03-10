@@ -17,4 +17,21 @@ export const setPageDescription = createAction("SET_PAGE_DESCRIPTION")();
 /** @type { ActionCreator<'SET_PAGE_COLOR'> } */
 export const setPageColor = createAction("SET_PAGE_COLOR")();
 
+/** @type { ActionCreator<'SET_CURRENT_PRESET_NUMBER'> } */
+export const setCurrentPresetNumber = createAction(
+  "SET_CURRENT_PRESET_NUMBER"
+)();
+
+/** @type { ActionCreator<'SET_PRESET_FILE'> } */
+export const setPresetFile = createAction("SET_PRESET_FILE")();
+
+/** @type { ActionCreator<'SET_PRESET_NAME'> } */
+export const setPresetName = createAction("SET_PRESET_NAME")();
+
+/** @type { ActionCreator<'SET_PRESET_DESCRIPTION'> } */
+export const setPresetDescription = createAction("SET_PRESET_DESCRIPTION")();
+
+/** @type { ActionCreator<'SET_PRESET_COLOR'> } */
+export const setPresetColor = createAction("SET_PRESET_COLOR")();
+
 // add page editing actions

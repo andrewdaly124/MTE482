@@ -16,7 +16,7 @@ import styles from "./index.module.scss";
 
 import Button from "../../../button";
 import InputField from "../../../inputField";
-import { ReactComponent as RenameSVG } from "../../../../assets/rename.svg";
+import { ReactComponent as PencilSVG } from "../../../../assets/pencil.svg";
 import { ReactComponent as ColorPickerSVG } from "../../../../assets/color-picker.svg";
 
 // page preview, need edit/save
@@ -102,14 +102,16 @@ export default function PagePreview() {
               inner={<ColorPickerSVG />}
               onClick={openColorPickerHook}
               size="normal"
+              noPadding
             />
           </div>
         )}
         <div className={styles.button}>
           <Button
-            inner={<RenameSVG />}
+            inner={<PencilSVG />}
             onClick={toggleEditMode}
             size="normal"
+            noPadding
           />
         </div>
       </div>

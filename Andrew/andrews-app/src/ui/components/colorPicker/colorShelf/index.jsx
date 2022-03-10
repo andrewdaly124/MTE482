@@ -16,11 +16,13 @@ export default function ColorShelf({ onClick }) {
         return (
           <div className={styles.button} key={index}>
             <Button
+              inner=""
               color={color}
               size="color"
               onClick={() => {
                 onClick(color);
               }}
+              noPadding
             />
           </div>
         );

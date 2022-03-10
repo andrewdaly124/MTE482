@@ -16,8 +16,37 @@
   }
 
   .inner {
-    font-size: 14px;
+    font-size: 16px;
     color: $GREY3;
     margin: 8px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    .logo {
+      width: auto;
+      height: auto;
+
+      svg {
+        width: 150px;
+        height: 150px;
+      }
+    }
+
+    .header {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .intro {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .importButton {
+      width: auto;
+    }
   }
 }
