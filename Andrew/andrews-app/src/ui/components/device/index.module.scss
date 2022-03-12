@@ -1,0 +1,192 @@
+@import "../../palette.module.scss";
+
+.device {
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: row;
+
+  transition: transform 0.1s !important;
+
+  .switch {
+    width: 9px;
+    height: 13px;
+    border-radius: 2px;
+    background-color: $GREY9;
+    margin-bottom: 110px;
+    z-index: 0;
+
+    transition: all 0.2s;
+  }
+
+  .console {
+    width: 468px;
+    height: 220px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    z-index: 1;
+
+    background-color: $GREY6;
+
+    .left {
+      width: 328px;
+      min-width: 328px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      flex-direction: column;
+
+      .screenContainer {
+        width: 100%;
+        height: 108px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+        flex-direction: row;
+
+        .led {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background-color: $GREY8;
+          margin-right: 14px;
+          margin: 0px 14px 27px 0px;
+          transition: background-color 0.6s;
+        }
+
+        .screen {
+          width: 240px;
+          height: 73px;
+          border-radius: 5px;
+          background-color: $GREY9;
+          margin-right: 20px;
+
+          .opacityContainer {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-direction: column;
+            transition: opacity 0.6s;
+
+            .top {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              flex-direction: row;
+              margin-top: 12px;
+
+              .first {
+                width: 35px;
+                height: 10px;
+                border-radius: 5px;
+                background-color: $GREY3;
+              }
+
+              .second {
+                width: 70px;
+                height: 10px;
+                border-radius: 5px;
+                background-color: $GREY3;
+                margin-left: 8px;
+              }
+            }
+          }
+
+          .middle {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            flex-direction: row;
+
+            .first {
+              width: 140px;
+              height: 10px;
+              border-radius: 5px;
+              background-color: $GREY3;
+            }
+
+            .second {
+              width: 56px;
+              height: 10px;
+              border-radius: 5px;
+              background-color: $GREY3;
+              margin-left: 8px;
+            }
+          }
+
+          .bottom {
+            width: 100%;
+            height: 10px;
+            margin-bottom: 10px;
+
+            .activeButton {
+              width: 10px;
+              height: 10px;
+              border-radius: 5px;
+              background-color: $GREY3;
+              transition: all 0.1s;
+            }
+          }
+        }
+      }
+
+      .buttons {
+        width: 100%;
+        height: 108px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-direction: row;
+
+        .button {
+          width: 45px;
+          height: 45px;
+          border-radius: 11px;
+          margin-left: 34px;
+          overflow: hidden;
+          cursor: pointer;
+          background-color: $GREY8;
+        }
+      }
+    }
+
+    .right {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      flex-direction: column;
+
+      .encoder {
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        background-color: $GREY8;
+        margin: 26px 36px 0px 0px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: column;
+
+        transition: transform 10s linear;
+
+        .tick {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background-color: $GREY9;
+          margin-top: 8px;
+        }
+      }
+    }
+  }
+}

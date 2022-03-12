@@ -4,11 +4,11 @@
 $BLACK: #000000;
 $WHITE: #ffffff;
 
-$BACKGROUNDFILTER: blur(100px) /* contrast(0.3) */ brightness(0.7);
+$BACKGROUNDFILTER: blur(10px) /* contrast(0.3) */ brightness(0.7);
 
-// background animation
-$GREY10PHASE1: rgba(20, 20, 20, 0.1);
-$GREY10PHASE2: rgba(20, 20, 20, 0.5); // keep this updated with grey 10
+// background animation - arbitrary opacity
+$GREY10PHASE1: rgba(20, 20, 20, 0.05);
+$GREY10PHASE2: rgba(20, 20, 20, 0.2);
 
 $PRIMARY: $WHITE;
 

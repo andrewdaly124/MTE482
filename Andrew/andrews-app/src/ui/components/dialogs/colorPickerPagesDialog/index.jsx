@@ -14,7 +14,7 @@ import ColorPicker from "../../colorPicker";
 import styles from "./index.module.scss";
 
 // this dialog only exists for page stuff. gonna have to be generalized if we wanna change that
-export default function ColorPickerDialog({ onSave }) {
+export default function ColorPickerPagesDialog({ onSave }) {
   const dispatch = useDispatch();
   const currentPageNumber = useSelector(getCurrentPageNumber);
   const currentPageColor = useSelector(getCurrentPageColor);
@@ -29,12 +29,13 @@ export default function ColorPickerDialog({ onSave }) {
     [currentPage]
   );
 
+  // resets the color state
   useEffect(() => {
     setInitColor(currentPageColor);
   }, [currentPageNumber]);
 
   return (
-    <div className={styles.colorPickerDialog}>
+    <div className={styles.colorPickerPagesDialog}>
       <div className={styles.backgroundContainer}>
         <div className={styles.pickerContainer}>
           <ColorPicker
@@ -50,6 +51,6 @@ export default function ColorPickerDialog({ onSave }) {
   );
 }
 
-ColorPickerDialog.propTypes = {
-  onSave: PropTypes.func.isRequired,
+ColorPickerPagesDialog.propTypes = {
+  onSave: PropTypes.func,
 };

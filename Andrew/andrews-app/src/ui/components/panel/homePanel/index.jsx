@@ -1,20 +1,37 @@
 import React from "react";
+import { importJson } from "../../../../utils/io";
+
+import FileInput from "../../fileInput";
+
+import { ReactComponent as GoogleSVG } from "../../../assets/google.svg";
 
 import styles from "./index.module.scss";
 
 // home panel inner
 export default function HomePanel() {
+  const ALLOW_LOGO = false;
   return (
     <div className={styles.homePanel}>
-      <div className={styles.title}>Home</div>
       <div className={styles.inner}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
+        {ALLOW_LOGO && (
+          <div className={styles.logo}>
+            <GoogleSVG />
+          </div>
+        )}
+        <div className={styles.header}>Welcome to Corda!</div>
+        <div className={styles.intro}>
+          From choosing effects, to plugging them in and playing live, Corda
+          offers an all-in-one platform for guitar effect processing.
+          <br />
+          <br /> Start from scratch or by importing a current configuration.
+        </div>
+        <div className={styles.importButton}>
+          <FileInput
+            inner="Import Existing Configuration"
+            onChange={importJson}
+            accept=".json"
+          />
+        </div>
       </div>
     </div>
   );

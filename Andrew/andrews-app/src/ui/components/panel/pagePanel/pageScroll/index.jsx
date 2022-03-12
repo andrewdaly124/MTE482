@@ -28,6 +28,7 @@ export default function PageScroll() {
         onClick={() => {
           dispatch(setCurrentPageNumber(parseInt(currentPageNumber, 10) - 1));
         }}
+        noPadding
       />
       <div className={styles.inputContainer}>
         <input
@@ -44,6 +45,7 @@ export default function PageScroll() {
         onClick={() => {
           dispatch(setCurrentPageNumber(parseInt(currentPageNumber, 10) + 1));
         }}
+        noPadding
       />
     </div>
   );

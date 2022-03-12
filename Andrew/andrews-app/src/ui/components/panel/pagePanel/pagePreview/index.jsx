@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  MAX_DESCRIPTION_LENGTH,
+  MAX_NAME_LENGTH,
+} from "../../../../../store/reducers/pages";
+import {
   getCurrentPageNumber,
   getCurrentPage,
   getIsColorPickerOpen,
 } from "../../../../../store/selectors";
-
 import {
   setPageName,
   setPageDescription,
@@ -16,7 +19,7 @@ import styles from "./index.module.scss";
 
 import Button from "../../../button";
 import InputField from "../../../inputField";
-import { ReactComponent as RenameSVG } from "../../../../assets/rename.svg";
+import { ReactComponent as PencilSVG } from "../../../../assets/pencil.svg";
 import { ReactComponent as ColorPickerSVG } from "../../../../assets/color-picker.svg";
 
 // page preview, need edit/save
@@ -88,7 +91,7 @@ export default function PagePreview() {
             onChange={(val) => setEditName(val)}
             placeholder={`Page ${currentPageNumber}`}
             autofocus
-            characterLimit={36}
+            characterLimit={MAX_NAME_LENGTH}
             size="normal"
           />
         ) : (
@@ -102,14 +105,16 @@ export default function PagePreview() {
               inner={<ColorPickerSVG />}
               onClick={openColorPickerHook}
               size="normal"
+              noPadding
             />
           </div>
         )}
         <div className={styles.button}>
           <Button
-            inner={<RenameSVG />}
+            inner={<PencilSVG />}
             onClick={toggleEditMode}
             size="normal"
+            noPadding
           />
         </div>
       </div>
@@ -120,7 +125,7 @@ export default function PagePreview() {
             value={editDescription}
             onChange={(val) => setEditDescription(val)}
             placeholder="Page Description"
-            characterLimit={248}
+            characterLimit={MAX_DESCRIPTION_LENGTH}
             size="paragraphNormal"
           />
         </div>

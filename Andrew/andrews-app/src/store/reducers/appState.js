@@ -3,6 +3,8 @@ import {
   setCurrentAppState,
   setColorInHistory,
   openColorPicker,
+  reshuffleUid,
+  openPresetEditor,
 } from "../actions";
 
 export const APP_STATES = { home: 0, pages: 1, bluetooth: 2 };
@@ -21,6 +23,8 @@ const DEFAULT_STATE = {
   currentAppState: APP_STATES.home,
   colorHistory: DEFAULT_COLOR_HISTORY,
   colorPickerOpen: false,
+  presetEditorOpen: false,
+  uid: 0,
 };
 
 const appState = createReducer(DEFAULT_STATE)
@@ -29,13 +33,19 @@ const appState = createReducer(DEFAULT_STATE)
   })
   // Don't know if this will be used, ever
   .handleAction(setColorInHistory, (state, { payload: { index, color } }) => {
-    console.log("appstate", index, color);
     const newColorHistory = [...state.colorHistory];
     newColorHistory[index] = color;
     return { ...state, colorHistory: newColorHistory };
   })
   .handleAction(openColorPicker, (state, { payload }) => {
     return { ...state, colorPickerOpen: payload };
+  })
+  .handleAction(openPresetEditor, (state, { payload }) => {
+    return { ...state, presetEditorOpen: payload };
+  })
+  .handleAction(reshuffleUid, (state) => {
+    const newUid = state.uid + 1;
+    return { ...state, uid: newUid };
   });
 
 export default appState;

@@ -2,9 +2,10 @@
 
 .presetDropdown {
   width: 100%;
+  min-height: 48px;
   display: flex;
   border-radius: 16px;
-  background-color: rgba(20, 20, 20, 0.15);
+  background-color: rgba(20, 20, 20, 0.4);
   overflow: hidden;
 
   .colorFilter {
@@ -15,15 +16,22 @@
     justify-content: space-between;
     flex-direction: column;
     border-radius: inherit;
-    backdrop-filter: $BACKGROUNDFILTER;
+
+    color: inherit;
+    fill: inherit;
 
     .header {
       width: 100%;
-      min-height: 48px;
+      max-width: 100%;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-direction: row;
       cursor: pointer;
+
+      color: inherit;
+      fill: inherit;
 
       &:hover {
         background-color: $HOVERDARK;
@@ -34,44 +42,80 @@
 
       .number {
         width: 40px;
+        min-width: 40px;
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 16px;
-        color: $GREY1;
         background-color: $HOVERDARK;
+
+        color: inherit;
+        fill: inherit;
       }
 
       .name {
-        height: 100%;
-        width: auto;
-        display: flex;
-        align-items: center;
+        display: block;
+        text-align: center;
         font-size: 14px;
-        color: $GREY1;
+        height: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        color: inherit;
+        fill: inherit;
+      }
+
+      .fileName {
+        display: block;
+        text-align: center;
+        font-size: 14px;
+        height: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        color: inherit;
+        fill: inherit;
       }
 
       .chevron {
         width: 40px;
+        min-width: 40px;
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         background-color: $HOVERDARK;
 
+        color: inherit;
+        fill: inherit;
+
         svg {
-          width: 24px;
-          height: 24px;
-          color: $GREY1;
+          width: 20px;
+          height: 20px;
+
+          color: inherit;
+          fill: inherit;
         }
       }
-      .edit {
-        width: 100%;
-        height: 100%;
-        align-items: center;
-        justify-content: space-between;
-        flex-direction: column;
+    }
+
+    .edit {
+      width: calc(100% - 32px);
+      height: 100%;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: column;
+      margin: 16px;
+      user-select: text;
+
+      .button {
+        color: $WHITE;
+        height: auto;
+        margin-top: 16px;
+        user-select: none;
       }
     }
   }

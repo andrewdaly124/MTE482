@@ -29,10 +29,7 @@ export default function PagePanel() {
           {currentPage.presets.map((preset, i) => {
             return (
               <div className={styles.preset} key={currentPageNumber * 10 + i}>
-                <PresetDropdown
-                  number={i + 1}
-                  name={preset.name || `Preset ${i + 1}`}
-                />
+                <PresetDropdown number={i + 1} preset={preset} />
               </div>
             );
           })}
