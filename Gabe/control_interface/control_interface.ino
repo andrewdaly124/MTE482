@@ -5,6 +5,9 @@
 #include <Adafruit_SSD1305.h>
 #include "WiFi.h"
 #include "esp_now.h"
+#include "Rotary.h"
+#include "Button.h"
+
 
 //Define connections
 int led = 27;
@@ -24,6 +27,21 @@ int scl = 22;
 //OLED Setup
 Adafruit_SSD1305 display(128, 32, &Wire, OLED_RESET);
 
+// enum UIState { EFFECT_SELECTION, POT_SELECTION };
+
+typedef struct effect {
+  uint8_t number;
+  uint8_t value;
+} effect;
+
+effect internalEffects[8];
+effect externalEffects[8];
+// effect effectArray[16];
+int currentPage = 0; //0-1
+bool useInternalEffects = true;
+int currentEffect = -1;
+int currentPot = 0;
+
 //Used to toggle the LED
 bool ledMode = 0;  
 
@@ -42,21 +60,34 @@ float voltage;
 #define ESP_EEPROM_ADDR 0x57
 #define MAX_LENGTH 512
 
+// Define the 5 buttons
+Button button0(btn0, btn1, 50);
+Button button1(btn1, btn0, 50);
+Button button2(btn2, btn3, 50);
+Button button3(btn3, btn2, 50);
+Button encoder_button(encS, 0, 50);
+
+bool flag0_1 = 0;
+bool flag2_3 = 0;
+bool pairButtonPressed = false;
+
+// Define the encoder
+Rotary rotary = Rotary(encA, encB);
+bool encoderFlag = false;
+
 //Other
 int input;
 int loopCount = 0;
 
-int effectCounter = 1;
-
 // ESP-NOW shit
 // put in the processor MAC address here
-uint8_t broadcastMACAddress[] = {0x0C, 0xDC, 0x7E, 0x3D, 0xA1, 0x1C};
-// uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x41, 0xF4};
+// uint8_t broadcastMACAddress[] = {0x0C, 0xDC, 0x7E, 0x3D, 0xA1, 0x1C};
+uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x41, 0xF4};
 
 // Define the variables that will store the data that is to be sent
 char effectName[32] = "FROM INTERFACE";
-uint8_t effectValue;
-char effectType[32];
+uint8_t effectValue = 0;
+char effectType[32] = "TEST";
 
 // Define the variables that will store the incoming data
 char incomingName[32];
@@ -71,6 +102,7 @@ typedef struct struct_message {
 } struct_message;
 
 String success;
+bool connectivityStatus = false;
 struct_message myReadings;
 struct_message incomingReadings;
 esp_now_peer_info_t peerInfo;
@@ -78,11 +110,14 @@ esp_now_peer_info_t peerInfo;
 // Callback function for when the data is sent
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   Serial.print("\r\nLast Packet Send Status:\t");
+  Serial.println(status);
   Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Succeded" : "Delivery Failed");
   if (status == 0) {
     success = "Delivery Succeded";
+    connectivityStatus = true;
   } else {
     success = "Delivery Failed";
+    connectivityStatus = false;
   }
 }
 
@@ -137,6 +172,17 @@ void setup() {
 
   digitalWrite(VOLED_EN, HIGH);
 
+  // Attach interrupts to the buttons
+  attachInterrupt(digitalPinToInterrupt(btn0), button_change_0, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(btn1), button_change_1, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(btn2), button_change_2, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(btn3), button_change_3, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(encS), button_change_enc, CHANGE);
+
+  // Attach interrupts to the encoder
+  attachInterrupt(encA, update_encoder, CHANGE);
+  attachInterrupt(encB, update_encoder, CHANGE);  
+
   if (!display.begin(0x3C))
   {
      Serial.println("Unable to initialize OLED");
@@ -150,8 +196,8 @@ void setup() {
   Serial.print("Battery voltage: ");
   Serial.println(measureVoltage());
 
-  // Set the device as a wifi station
-  WiFi.mode(WIFI_MODE_STA);
+  // Set the device as a wifi station and access point
+  WiFi.mode(WIFI_AP_STA);
   Serial.print("MAC Address: ");
   Serial.println(WiFi.macAddress());
 
@@ -182,6 +228,10 @@ void setup() {
   // Register the callback function that will be called when new data is received
   esp_now_register_recv_cb(OnDataRecv);
 
+  sendReading();
+  initializeEffects();
+  Serial.println("Initialized Effects.");
+
   toggleLed();
 
   Wire.begin();
@@ -189,44 +239,168 @@ void setup() {
 }
 
 void loop() {
+  /*
   if (Serial.available())
   {
     input = Serial.parseInt();
     Serial.println(input);
-  }
-  /* if (loopCount >= 50000)
-  {
-    toggleLed(); 
-    loopCount = 0; 
-  } */
-
-  //toggleLed();
-
-  /*if (digitalRead(btn0) == 0)
-  {
-    while (digitalRead(btn0) == 0)
-    {
-      delay(100); 
-      Serial.println("BUTTON 0!");
-      printThreeLinesText("Button 0:", "Pressed!", " ");
-    }
-    printThreeLinesText("Button 0:", "Released!", " ");
-    
-    sendReading();
   }*/
 
+  //printButtonStatus();
+  //printDebug();
   printUI();
-  //printDisplay();
-  ifButtonPressed();
-  GarbageEncoderCheck();
+  checkButtonStatus();
+  checkEncoderStatus();
+  
+  
+  // printUI();
+  // printDisplay();
+  // ifButtonPressed();
+  // GarbageEncoderCheck();
   // loopCount ++;
 
   delay(100);
 }
 
+void initializeEffects() {
+  for(int i = 0; i < 8; i++) {
+    internalEffects[i].number = i;
+    internalEffects[i].value = 0;
+
+    externalEffects[i].number = i;
+    externalEffects[i].value = 0;
+  }
+}
+
+void printDebug() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  printConnectivitySignal();
+  printBatterySymbol(112, 3, 4);
+  centreText(String(counter), 0);
+  centreText(String(currentEffect), 12);
+  display.display();
+}
+
+void printUI() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  printConnectivitySignal();
+  printBatterySymbol(112, 3, 7);
+  display.drawRoundRect(8, 10, 112, 8, 2, WHITE);
+  display.fillRoundRect(8, 10, min(counter/2, 112), 8, 2, WHITE);
+  display.display();
+}
+
+void update_encoder()
+{
+  unsigned char result = rotary.process();
+
+  if (result == DIR_CW) {
+    counter = min(counter + 5, 255);
+    // counter += 5;
+    Serial.println(counter);
+    encoderFlag = true;
+  } else if (result == DIR_CCW) {
+    counter = max(counter - 5, 0);
+    // counter -= 5;
+    Serial.println(counter);
+    encoderFlag = true;
+  }
+}
+
+void checkEncoderStatus()
+{
+  if(encoderFlag) {
+    char currentPot_str[32];
+    itoa(currentPot, currentPot_str, 10);
+    strcpy(effectName, currentPot_str);
+    effectValue = counter;
+    strcpy(effectType, "POT");
+    sendReading();
+    encoderFlag = false;
+  }
+}
+
+void checkButtonStatus()
+{
+  if(button0.flag | button1.flag | button2.flag | button3.flag | encoder_button.flag | flag0_1 | flag2_3) {
+    if(button0.flag) {
+      effectValue = currentPage*4+0;
+      currentEffect = (currentPage * 4) + 0;
+      strcpy(effectType, "EFFECT");
+      sendReading();
+      button0.flag = false;
+    }
+    if(button1.flag) {
+      effectValue = currentPage*4+1;
+      currentEffect = (currentPage * 4) + 1;
+      strcpy(effectType, "EFFECT");
+      sendReading();
+      button1.flag = false;
+    }
+    if(button2.flag) {
+      effectValue = currentPage*4+2;
+      currentEffect = (currentPage * 4) + 2;
+      strcpy(effectType, "EFFECT");
+      sendReading();
+      button2.flag = false;
+    }
+    if(button3.flag) {
+      effectValue = currentPage*4+3;
+      currentEffect = (currentPage * 4) + 3;
+      strcpy(effectType, "EFFECT");
+      sendReading();
+      button3.flag = false;
+    }
+    if(encoder_button.flag) {
+      currentPot = (currentPot + 1) % 3;
+      //strcpy(effectName, "POT");
+      //effectValue = currentPot;
+      //strcpy(effectType, "SWITCH");
+      //sendReading();
+      encoder_button.flag = false;
+    }
+    if(flag0_1) {
+      if(currentPage == 0) {
+        currentPage = 1;
+        strcpy(effectType, "SWITCH");
+        sendReading();
+        flag0_1 = false;
+      }
+      else {
+        currentPage = 0;
+        flag0_1 = false;
+      }
+      /*strcpy(effectName, "PREV");
+      effectValue = 0;
+      strcpy(effectType, "PAGE");
+      sendReading();
+      flag0_1 = false;*/
+    }
+    if(flag2_3) {
+      if(currentPage == 1) {
+        currentPage = 0;
+        strcpy(effectType, "SWITCH");
+        sendReading();
+        flag2_3 = false;
+      }
+      else {
+        currentPage = 1;
+        flag2_3 = false;
+      }
+      /*strcpy(effectName, "NEXT");
+      effectValue = 0;
+      strcpy(effectType, "PAGE");
+      sendReading();
+      flag2_3 = false;*/
+    }
+  }
+}
+
 void sendReading() {
-  // getData();
-  
   strcpy(myReadings.effectName, effectName);
   myReadings.effectValue = effectValue;
   strcpy(myReadings.effectType, effectType);
@@ -239,11 +413,6 @@ void sendReading() {
   } else {
     Serial.println("Error sending the data");
   }
-}
-
-void getData() {
-  effectValue = effectCounter * 3;
-  effectCounter++;
 }
 
 void printThreeLinesText(String line1, String line2, String line3)
@@ -282,13 +451,13 @@ void printDisplay()
   display.display();
 }
 
-void printUI()
+void printUITest()
 {
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(WHITE);
   printConnectivitySignal();
-  printBatterySymbol(112, 3);
+  printBatterySymbol(112, 3, 4);
   centreText("SET NAME", 0);
   centreText("EFFECT NAME #1", 12);
   display.setCursor(6,23);
@@ -305,21 +474,62 @@ void printUI()
   display.display();
 }
 
-void printConnectivitySignal()
+void printButtonStatus()
 {
-  // X symbol
-  display.drawLine(2, 2, 6, 6, WHITE);
-  display.drawLine(2, 6, 6, 2, WHITE);
+  display.clearDisplay();
+  
+  if(button0.flag) {
+    display.setCursor(6,23);
+    display.setTextColor(WHITE);
+    display.print("1");
+  }
+  if(button1.flag) {
+    display.setCursor(30, 23);
+    display.print("2");
+  }
+  if(button2.flag) {
+    display.setCursor(50, 23);
+    display.print("3");
+  }
+  if(button3.flag) {
+    display.setCursor(75, 23);
+    display.print("4");
+  }
+  if(encoder_button.flag) {
+    display.setCursor(100, 23);
+    display.print("5");
+  }
+  if(flag0_1) {
+    display.setCursor(25, 0);
+    display.print("0_1");
+  }
+  if(flag2_3) {
+    display.setCursor(75, 0);
+    display.print("2_3");
+  }
 
-  // Checkmark symbol
-  display.drawLine(2+8, 5, 3+8, 6, WHITE);
-  display.drawLine(3+8, 6, 7+8, 2, WHITE);
+  display.display();
 }
 
-void printBatterySymbol(int x, int y)
+void printConnectivitySignal()
+{
+  if (connectivityStatus){
+    // Checkmark symbol
+    display.drawLine(2, 5, 3, 6, WHITE);
+    display.drawLine(3, 6, 7, 2, WHITE);
+  }
+  else {
+    // X symbol
+    display.drawLine(2, 2, 6, 6, WHITE);
+    display.drawLine(2, 6, 6, 2, WHITE);
+  }
+}
+
+void printBatterySymbol(int x, int y, int level)
 {
   display.drawLine(x, y, x, y+1, WHITE);
-  display.drawRoundRect(x+1, y-2, 11, 6, 1, WHITE);
+  display.drawRoundRect(x+1, y-2, 10, 6, 1, WHITE);
+  display.fillRect(x+10-level, y-1, level, 4, WHITE); 
 }
 
 void centreText(String words, int height)
@@ -361,110 +571,49 @@ byte i2c_eeprom_read_byte( int deviceaddress, unsigned int eeaddress ) {
     return rdata;
 }
 
-void GarbageEncoderCheck()
-{
-  //This garbage function doesn't use interrupts or any debounding therefor it BAD!
-  
-  // Read the current state of encA
-   currentStateEncA = digitalRead(encA);   
-    
-   // If the previous and the current state of the encA are different then a pulse has occured
-   if (currentStateEncA != previousStateEncA){ 
-       
-     // If the encB state is different than the encA state then 
-     // the encoder is rotating counterclockwise
-     if (digitalRead(encB) != currentStateEncA) { 
-       counter -= 5;
-       
-     } else {
-       // Encoder is rotating clockwise
-       counter += 5;
-       
-     }
-     Serial.print("Encoder Value: ");
-     Serial.println(counter);
-
-     effectValue = counter;
-     strcpy(effectType, "POT");
-     sendReading();
-
-     // printThreeLinesText("Encoder Value: ", String(counter), " ");
-   } 
-   // Update previousStateEncA with the current state
-   previousStateEncA = currentStateEncA; 
+//These silly functions are needed to pass the button objects properly
+void button_change_0(){
+  button_change(button0);
 }
 
-void ifButtonPressed()
-{
-  if (digitalRead(btn0) == 0)
-  {
-    while (digitalRead(btn0) == 0)
-    {
-      delay(50); 
-      Serial.println("BUTTON 0!");
-      // printThreeLinesText("Button 0:", "Pressed!", " ");
-    }
-    // printThreeLinesText("Button 0:", "Released!", " ");
-    
-    pressedButtons[0] = true;
-    effectValue = 0;
-    strcpy(effectType, "EFFECT");
-    sendReading();
-  }
-  else if (digitalRead(btn1) == 0)
-  {
-    while (digitalRead(btn1) == 0)
-    {
-      delay(50); 
-      Serial.println("BUTTON 1!");
-      // printThreeLinesText("Button 1:", "Pressed!", " ");
-    }
-   // printThreeLinesText("Button 1:", "Released!", " ");
+void button_change_1(){
+  button_change(button1);
+}
 
-    effectValue = 1;
-    strcpy(effectType, "EFFECT");
-    sendReading();
-  }
-  else if (digitalRead(btn2) == 0)
-  {
-    while (digitalRead(btn2) == 0)
-    {
-      delay(50); 
-      Serial.println("BUTTON 2!");
-      // printThreeLinesText("Button 2:", "Pressed!", " ");
-    }
-    // printThreeLinesText("Button 2:", "Released!", " ");
+void button_change_2(){
+  button_change(button2);
+}
 
-    effectValue = 2;
-    strcpy(effectType, "EFFECT");
-    sendReading();
-  }
-  else if (digitalRead(btn3) == 0)
-  {
-    while (digitalRead(btn3) == 0)
-    {
-      delay(50); 
-      Serial.println("BUTTON 3!");
-      // printThreeLinesText("Button 3:", "Pressed!", " ");
-    }
-    // printThreeLinesText("Button 3:", "Released!", " ");
+void button_change_3(){
+  button_change(button3);
+}
 
-    effectValue = 3;
-    strcpy(effectType, "EFFECT");
-    sendReading();
-  }
-  else if (digitalRead(encS) == 0)
-  {
-    while (digitalRead(encS) == 0)
-    {
-      delay(50); 
-      Serial.println("ENCODER SWITCH!");
-      // printThreeLinesText("Encoder:", "Pressed!", " ");
-    }
-    // printThreeLinesText("Encoder:", "Released!", " ");
+void button_change_enc(){
+  button_change(encoder_button);
+}
 
-    effectValue = 0;
-    strcpy(effectType, "SWITCH");
-    sendReading();
+//This function is called through the above functions when a button changes state
+void button_change(Button &button) {
+  if (digitalRead(button.pin) == LOW) {
+    button.lastDebounceTime = millis();
+  }
+  else {
+    if ((millis() - button.lastDebounceTime) >= button.debounceDelay) {
+      if ((button.pairedPin != 0) && (digitalRead(button.pairedPin) == LOW)) {
+        if (button.pin == btn0 || button.pin == btn1){
+          flag0_1 = true;
+        }
+        else{
+          flag2_3 = true;
+        }
+        pairButtonPressed = true;
+      }
+      else if ((button.pairedPin == 0) || (pairButtonPressed == false)) {
+        button.flag = true;
+      }
+      else {
+        pairButtonPressed = false;
+      }
+    }
   }
 }

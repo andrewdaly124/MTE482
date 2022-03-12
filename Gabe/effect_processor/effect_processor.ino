@@ -1,4 +1,5 @@
 //Includes
+#include <Arduino.h>
 #include <Wire.h>
 #include <pgmspace.h>
 #include "ROM1.h"
@@ -11,6 +12,9 @@
 #include "ROM8.h"
 #include "WiFi.h"
 #include "esp_now.h"
+#include "FS.h"
+#include <LITTLEFS.h>
+#include <SimpleFTPServer.h>
 
 //Define connections for the ESP32
 int t0 = 13; // FV1_T0 - 0: use internal ROM programs, 1: use programs from external EEPROM
@@ -28,9 +32,25 @@ int scl = 22; // SCL - EEPROM clock (internal pull up)
 #define ESP_EEPROM_ADDR 0x57
 #define MAX_LENGTH 512
 
+//unsigned char ROM_00[4096], ROM_01[4096], ROM_02[4096], ROM_03[4096], ROM_04[4096], ROM_05[4096], ROM_06[4096], ROM_07[4096]; 
+//byte* prog_addr[] = {(byte *)ROM_00, (byte *)ROM_01, (byte *)ROM_02, (byte *)ROM_03, (byte *)ROM_04,  (byte *)ROM_05, (byte *)ROM_06, (byte *)ROM_07 };
 byte* prog_addr[] = {(byte *)ROM_00, (byte *)ROM_01, (byte *)ROM_02, (byte *)ROM_03, (byte *)ROM_04,  (byte *)ROM_05, (byte *)ROM_06, (byte *)ROM_07 };
 
 String input;
+
+// FTP Server
+// char ssid[] = "Cloudwifi-704-P";
+// char password[] = "CW094C16";
+
+//   char ssid[] = "REAL Gamers Only 2.4GHz";
+//   char password[] = "Peepohappy";
+
+/*
+ char ssid[] = "CLICK HERE !! -> ts.b34pnt.co?hr";
+ char password[] = "andrew4444";
+*/
+
+//FtpServer ftpSrv;
 
 // Define LED connections, channels and toggles
 int ledMode = 0; 
@@ -51,8 +71,8 @@ int effectCounter = 1;
 
 // ESP-NOW shit
 // put in the interface MAC address here
-uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x3B, 0x78};
-// uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x45, 0xE4};
+// uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x3B, 0x78};
+uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x45, 0xE4};
 
 // Define the variables that will store the data that is to be sent
 char effectName[32] = "FROM PROCESSOR";
@@ -112,6 +132,17 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   if (String(incomingReadings.effectType) == "EFFECT") {
     selectEffect(String(incomingReadings.effectValue));
   }
+  else if (String(incomingReadings.effectType) == "PAGE") {
+    if (String(incomingReadings.effectName) == "PREV") {
+        Serial.println("PREVIOUS PAGE");
+    }
+    else if (String(incomingReadings.effectName) == "NEXT") {
+        Serial.println("NEXT PAGE");
+    }
+  }
+  else if (String(incomingReadings.effectType) == "POT") {
+    setPots(incomingReadings.effectValue, int(incomingReadings.effectName));
+  }
   else if (String(incomingReadings.effectType) == "SWITCH") {
     if (digitalRead(t0) == LOW) {
       selectEffect("e");
@@ -120,20 +151,103 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
       selectEffect("i");
     }
   }
+
+  if (String(incomingReadings.effectType) == "EFFECT") {
+    selectEffect(String(incomingReadings.effectValue));
+  }
+  else if (String(incomingReadings.effectType) == "SWITCH") {
+    
+    if(String(incomingReadings.effectName) == "POT"){
+      
+    }
+  } 
   else if (String(incomingReadings.effectType) == "POT") {
-    setPots(incomingReadings.effectValue, 128, 128);
+    setPots(incomingReadings.effectValue, int(incomingReadings.effectName));
+    // setPots(incomingReadings.effectValue, 128, 128);
   }
 }
+
+void _callback(FtpOperation ftpOperation, unsigned int freeSpace, unsigned int totalSpace){
+  switch (ftpOperation) {
+    case FTP_CONNECT:
+      Serial.println(F("FTP: Connected!"));
+      break;
+    case FTP_DISCONNECT:
+      Serial.println(F("FTP: Disconnected!"));
+      break;
+    case FTP_FREE_SPACE_CHANGE:
+      Serial.printf("FTP: Free space change, free %u of %u!\n", freeSpace, totalSpace);
+      break;
+    default:
+      break;
+  }
+};
+void _transferCallback(FtpTransferOperation ftpOperation, const char* name, unsigned int transferredSize){
+  switch (ftpOperation) {
+    case FTP_UPLOAD_START:
+      Serial.println(F("FTP: Upload start!"));
+      break;
+    case FTP_UPLOAD:
+      Serial.printf("FTP: Upload of file %s byte %u\n", name, transferredSize);
+      break;
+    case FTP_TRANSFER_STOP:
+      Serial.println(F("FTP: Finish transfer!"));
+      break;
+    case FTP_TRANSFER_ERROR:
+      Serial.println(F("FTP: Transfer error!"));
+      break;
+    default:
+      break;
+  }
+
+  /* FTP_UPLOAD_START = 0,
+   * FTP_UPLOAD = 1,
+   *
+   * FTP_DOWNLOAD_START = 2,
+   * FTP_DOWNLOAD = 3,
+   *
+   * FTP_TRANSFER_STOP = 4,
+   * FTP_DOWNLOAD_STOP = 4,
+   * FTP_UPLOAD_STOP = 4,
+   *
+   * FTP_TRANSFER_ERROR = 5,
+   * FTP_DOWNLOAD_ERROR = 5,
+   * FTP_UPLOAD_ERROR = 5
+   */
+};
 
 void setup() {
   Serial.begin(115200);
   delay(10);
-  Serial.println("Hello! Enter effect from 0-7: ");
 
-  // Sets the device as a wifi station
-  WiFi.mode(WIFI_MODE_STA);
+  // Sets the device as a wifi station (could use WIFI_AP_STA if needed)
+  WiFi.mode(WIFI_AP_STA);
   Serial.print("MAC Address: ");
   Serial.println(WiFi.macAddress());
+
+  // Initialize the FTP server
+/*  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.println(ssid);
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  if (LITTLEFS.begin(true)) {
+    ftpSrv.setCallback(_callback);
+    ftpSrv.setTransferCallback(_transferCallback);
+
+    Serial.println("LittleFS opened!");
+    ftpSrv.begin("user","password");    //username, password for ftp.   (default 21, 50009 for PASV)
+  }
+*/
+  //esp_wifi_set_channel(channel, WIFI_SECOND_CHAN_NONE);
 
   // Initialize ESP-NOW 
   if (esp_now_init() != ESP_OK) {
@@ -187,13 +301,17 @@ void setup() {
 
   //Set bypass on
   selectEffect("5");
-  setPots(128,128,128);
+  //setPots(128,128,128);
+  setPots(128, 0);
+  setPots(128, 1);
+  setPots(128, 2);
 
   Wire.begin();
   Wire.setClock(400000); //Most EEPROMs can run 400kHz and higher
 
   int addr = 0; //first address
   delay(10);
+  
     while (addr < 512) {
       for (int program = 0; program < 8; program++) {
         Serial.print(addr + program * 512);
@@ -212,8 +330,16 @@ void setup() {
       Serial.println();
       delay(10);
   }
-  Serial.println("-----------------");
+  
 
+  // read_file_info("/effect0.h", ROM_00);
+  /*read_file_info("/effect1.h", ROM_01);
+  read_file_info("/effect2.h", ROM_02);
+  read_file_info("/effect3.h", ROM_03);
+  read_file_info("/effect4.h", ROM_04);
+  read_file_info("/effect5.h", ROM_05);
+  read_file_info("/effect6.h", ROM_06);
+  read_file_info("/effect7.h", ROM_07);*/
 
   for (int program = 0; program<8; program++) {
     Serial.print("Writing program ");
@@ -221,7 +347,7 @@ void setup() {
     for (int page=0; page<MAX_LENGTH; page+=16) {
         // write 16 bytes at a time to not stress out Wire buffer
         //Serial.print((int)prog_addr[program]);
-        //Serial.print(" ");
+        //Serial.print(" ");  
         //Serial.println(page+program*512);
       i2c_eeprom_write_page(FV1_EEPROM_ADDR, page+program*512, prog_addr[program], page); // write to EEPROM 
       delay(10); //add a small delay
@@ -229,7 +355,7 @@ void setup() {
     }
   }
   Serial.println("Memory written");
-
+  
 }
 
 void loop() {
@@ -241,6 +367,8 @@ void loop() {
 
     selectEffect(input);
   } */
+  // ftpSrv.handleFTP();
+
   
   if (Serial.available() > 0)
   {
@@ -250,8 +378,8 @@ void loop() {
     selectEffect(input);
   }
   // sendReading();
-  delay(3000); 
-  toggleLED();
+  // delay(3000); 
+  // toggleLED();
 }
 
 void getData() {
@@ -361,13 +489,59 @@ void selectEffect(String input)
   } 
 }
 
+void setPots(int potValue, int potNum)
+{
+  switch (potNum) {
+    case 0:
+      dacWrite(pot0, constrain(potValue, 0, 255));
+      break;
+    case 1:
+      dacWrite(pot1, constrain(potValue, 0, 255));
+      break;
+    case 2:
+      ledcWrite(pot2Channel, constrain(potValue, 0, 255));
+      break;
+  }
+}
+/*
 void setPots(int pot0Value, int pot1Value, int pot2Value)
 {
   dacWrite(pot0, constrain(pot0Value, 0, 255));
   dacWrite(pot1, constrain(pot1Value, 0, 255));
   ledcWrite(pot2Channel, constrain(pot2Value, 0, 255));
 }
+*/
 
+void read_file_info(String path, unsigned char *memory) {
+  bool filePath = LITTLEFS.exists(path);
+
+  if(filePath) {
+    Serial.println("Hallelujah");
+
+    File file = LITTLEFS.open(path, "r");
+    Serial.print("\nFile size: ");
+    int fileSize = file.size();
+    Serial.println(fileSize);
+
+    Serial.print("Content inside file: \n");
+    //unsigned char content[fileSize];
+
+    while (file.available()){
+      /*Serial.write(file.read(ROM_00, sizeof(ROM_00)));
+      Serial.print("Memory: ");
+      Serial.println(sizeof(ROM_00));*/
+      byte a = file.read();
+      Serial.write(a);
+      //Serial.write(file.read());
+    }
+    Serial.println("\n");
+    file.close();
+  }
+  else {
+    Serial.print("Sadge ");
+    Serial.println(path);
+  }
+}
 
 // data can be maximum of about 30 bytes, because the Wire library has a buffer of 32 bytes
 void i2c_eeprom_write_page( int deviceaddress, unsigned int eeaddresspage, byte* data, unsigned int page ) {
