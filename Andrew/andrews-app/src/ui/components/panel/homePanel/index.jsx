@@ -3,19 +3,20 @@ import { importJson } from "../../../../utils/io";
 
 import FileInput from "../../fileInput";
 
-import { ReactComponent as GoogleSVG } from "../../../assets/google.svg";
+// import { ReactComponent as LogoSvg } from "../../../assets/logo_bare.svg";
+import { ReactComponent as LogoSvg } from "../../../assets/logo.svg";
 
 import styles from "./index.module.scss";
 
 // home panel inner
 export default function HomePanel() {
-  const ALLOW_LOGO = false;
+  const ALLOW_LOGO = true;
   return (
     <div className={styles.homePanel}>
       <div className={styles.inner}>
         {ALLOW_LOGO && (
           <div className={styles.logo}>
-            <GoogleSVG />
+            <LogoSvg />
           </div>
         )}
         <div className={styles.header}>Welcome to Corda!</div>
