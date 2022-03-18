@@ -13,13 +13,14 @@
   .title {
     font-size: 40px; // maybe change
     width: 100%;
+    margin-bottom: 8px;
   }
 
   .inner {
     font-size: 16px;
     color: $GREY3;
     text-align: center;
-    margin: 8px 0px;
+    margin: 16px 0px;
   }
 
   .importButton {

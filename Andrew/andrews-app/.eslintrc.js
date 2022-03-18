@@ -41,5 +41,7 @@ module.exports = {
     "react/require-default-props": 0,
     "react/jsx-no-bind": 0,
     "no-nested-ternary": 0,
+    "import/no-named-as-default": 0,
+    "import/no-named-as-default-member": 0,
   },
 };
