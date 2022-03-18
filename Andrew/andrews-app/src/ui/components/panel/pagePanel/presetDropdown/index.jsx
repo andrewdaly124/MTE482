@@ -67,7 +67,7 @@ export default function PresetDropdown({ number, preset }) {
     } else {
       onEditPreset();
     }
-  }, [open, onEditPreset]);
+  }, [open, onEditPreset, currPresetDescription, preset]);
 
   useEffect(() => {
     // Just need the component update

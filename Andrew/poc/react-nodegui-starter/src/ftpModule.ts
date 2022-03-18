@@ -2,7 +2,9 @@ import fs from "fs";
 import Client from "ftp";
 
 let pages: any;
-const PATH: string = "../../profile/";
+//const PATH: string = "../../profile/";
+const PATH: string = "../../profile/capstone/";
+const TF_PATH: string = "../../profile/tf/";
 const CREDS: any = {
   host: "192.168.0.101",
   port: 21,
@@ -52,7 +54,7 @@ function buildPageForEsp(page: any, index: number) {
     const newPreset: any = {};
 
     newPreset.file = page.presets[i].file;
-    newPreset.tfFile = "effect" + fileNum + ".h";
+    // newPreset.tfFile = "effect" + fileNum + ".h";
     newPreset.name = page.presets[i].name || `Preset ${i + 1}`;
 
     fileNum++;
@@ -89,7 +91,7 @@ export function initiateFtp() {
   console.log(pagesToSend);
 
   const transferJson = JSON.stringify(pagesToSend);
-  fs.writeFile(PATH + "transferProfile.json", transferJson, () => {});
+  fs.writeFile(TF_PATH + "transferProfile.json", transferJson, () => {});
 
   console.log("Beginning Transfer!");
   ftpUploadProfile(); // upload profile json
@@ -107,8 +109,10 @@ export function initiateFtp() {
 function ftpUploadProfile() {
   var c = new Client();
   c.on("ready", function () {
-    c.put(PATH + "transferProfile.json", "profile.json", function (err) {
-      if (err) throw err;
+    c.put(TF_PATH + "transferProfile.json", "profile.json", function (err) {
+      if (err) {
+        console.log("Could not upload profile.json");
+      }
       c.end();
       console.log("profile transfered");
     });
@@ -119,8 +123,10 @@ function ftpUploadProfile() {
 function ftpUploadPreset(preset: any) {
   var c = new Client();
   c.on("ready", function () {
-    c.put(PATH + preset.file, preset.tfFile, function (err) {
-      if (err) throw err;
+    c.put(PATH + preset.file, /* preset.tfFile */ preset.file, function (err) {
+      if (err) {
+        console.log("Could not upload ", preset.file);
+      }
       c.end();
       console.log("Transferred " + preset.file + " as " + preset.tfFile);
     });
