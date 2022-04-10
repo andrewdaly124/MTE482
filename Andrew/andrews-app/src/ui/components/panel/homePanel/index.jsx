@@ -24,7 +24,7 @@ export default function HomePanel() {
           From choosing effects, to plugging them in and playing live, Corda
           offers an all-in-one platform for guitar effect processing.
           <br />
-          <br /> Start from scratch or by importing a current configuration.
+          <br /> Start from scratch or by importing an existing configuration.
         </div>
         <div className={styles.importButton}>
           <FileInput
