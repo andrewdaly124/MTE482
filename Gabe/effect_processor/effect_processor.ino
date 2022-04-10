@@ -10,11 +10,12 @@
 #include "ROM6.h"
 #include "ROM7.h"
 #include "ROM8.h"
-#include "WiFi.h"
-#include "esp_now.h"
-#include "FS.h"
+#include <WiFi.h>
+#include <esp_now.h>
+#include <FS.h>
 #include <LITTLEFS.h>
 #include <SimpleFTPServer.h>
+#include <ArduinoJson.h>
 
 //Define connections for the ESP32
 int t0 = 13; // FV1_T0 - 0: use internal ROM programs, 1: use programs from external EEPROM
@@ -31,10 +32,18 @@ int scl = 22; // SCL - EEPROM clock (internal pull up)
 #define FV1_EEPROM_ADDR 0x50
 #define ESP_EEPROM_ADDR 0x57
 #define MAX_LENGTH 512
+#define EFFECT_MAX_LENGTH 4096
+#define WRITE_LENGTH 16
+#define READ_LENGTH 16
 
 //unsigned char ROM_00[4096], ROM_01[4096], ROM_02[4096], ROM_03[4096], ROM_04[4096], ROM_05[4096], ROM_06[4096], ROM_07[4096]; 
 //byte* prog_addr[] = {(byte *)ROM_00, (byte *)ROM_01, (byte *)ROM_02, (byte *)ROM_03, (byte *)ROM_04,  (byte *)ROM_05, (byte *)ROM_06, (byte *)ROM_07 };
 byte* prog_addr[] = {(byte *)ROM_00, (byte *)ROM_01, (byte *)ROM_02, (byte *)ROM_03, (byte *)ROM_04,  (byte *)ROM_05, (byte *)ROM_06, (byte *)ROM_07 };
+int effectLocations[128];
+byte numEffectsLoaded = 0;
+
+int currentEEPROMSlot = 0;
+const int numEEPROMSlots = 8;
 
 String input;
 
@@ -45,12 +54,10 @@ String input;
 //   char ssid[] = "REAL Gamers Only 2.4GHz";
 //   char password[] = "Peepohappy";
 
-/*
  char ssid[] = "CLICK HERE !! -> ts.b34pnt.co?hr";
  char password[] = "andrew4444";
-*/
 
-//FtpServer ftpSrv;
+FtpServer ftpSrv;
 
 // Define LED connections, channels and toggles
 int ledMode = 0; 
@@ -71,29 +78,63 @@ int effectCounter = 1;
 
 // ESP-NOW shit
 // put in the interface MAC address here
-// uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x3B, 0x78};
-uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x45, 0xE4};
+uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x3B, 0x78};
+// uint8_t broadcastMACAddress[] = {0x34, 0x94, 0x54, 0x00, 0x45, 0xE4};
 
 // Define the variables that will store the data that is to be sent
-char effectName[32] = "FROM PROCESSOR";
-uint8_t effectValue;
-char effectType[32];
+//char effectName[32] = "FROM PROCESSOR";
+//uint8_t effectValue;
+//char effectType[32];
+
+int8_t currentEffectNumber = -1;
+char currentEffectName[31];
+// char* currentPotNames[3];
+char currentPotOneName[31];
+char currentPotTwoName[31];
+char currentPotThreeName[31];
+uint8_t currentPotValues[3];
+uint8_t currentPotNameLengths[3];
+uint8_t currentEffectNameLength;
 
 // Define the variables that will store the incoming data
-char incomingName[32];
-uint8_t incomingValue;
-char incomingType[32];
+// char incomingName[32];
+// uint8_t incomingValue;
+// char incomingType[32];
+
+int8_t incomingEffectNumber;
+char incomingEffectName[31];
+// char* incomingPotNames[3];
+char incomingPotOneName[31];
+char incomingPotTwoName[31];
+char incomingPotThreeName[31];
+uint8_t incomingPotValues[3];
+uint8_t incomingPotNameLengths[3];
+uint8_t incomingEffectNameLength;
 
 // make sure this is the same structure on the other side
-typedef struct struct_message {
+/*typedef struct struct_message {
   char effectName[32];
   uint8_t effectValue;
   char effectType[32];
-} struct_message;
+} struct_message;*/
+
+typedef struct effect_message {
+  int8_t effectNumber;
+  char effectName[31];
+  // char* potNames[3];
+  char potOneName[31];
+  char potTwoName[31];
+  char potThreeName[31];
+  uint8_t potValues[3];
+  uint8_t potNameLengths[3];
+  uint8_t effectNameLength;
+} effect_message;
 
 String success;
-struct_message myReadings;
-struct_message incomingReadings;
+// struct_message myReadings;
+// struct_message incomingReadings;
+effect_message currentEffect;
+effect_message incomingEffect;
 esp_now_peer_info_t peerInfo;
 
 // Callback function for when the data is sent
@@ -103,6 +144,10 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   if (status == 0)
   {
     success = "Delivery Succeded";
+    // TO-DO: change LED status based on connnectivity status
+    // Green: Connected to interface and ready to go
+    // Blue: Bad Wifi
+    // Red: Bad ESP-NOW
   }
   else
   {
@@ -112,58 +157,63 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 
 // Callback function for when the data is received
 void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
-  memcpy(&incomingReadings, incomingData, sizeof(incomingReadings));
+  // memcpy(&incomingReadings, incomingData, sizeof(incomingReadings));
+  memcpy(&incomingEffect, incomingData, sizeof(incomingEffect));
   
   Serial.print("Bytes received: ");
   Serial.println(len);
   
-  memcpy(incomingName, incomingReadings.effectName, sizeof(incomingReadings.effectName));
-  incomingValue = incomingReadings.effectValue;
-  memcpy(incomingType, incomingReadings.effectType, sizeof(incomingReadings.effectType));
+  // memcpy(incomingName, incomingReadings.effectName, sizeof(incomingReadings.effectName));
+  // incomingValue = incomingReadings.effectValue;
+  // memcpy(incomingType, incomingReadings.effectType, sizeof(incomingReadings.effectType));
+
+  incomingEffectNumber = incomingEffect.effectNumber;
+  memcpy(incomingEffectName, incomingEffect.effectName, sizeof(incomingEffect.effectName));
+  memcpy(incomingPotOneName, incomingEffect.potOneName, sizeof(incomingEffect.potOneName));
+  memcpy(incomingPotTwoName, incomingEffect.potTwoName, sizeof(incomingEffect.potTwoName));
+  memcpy(incomingPotThreeName, incomingEffect.potThreeName, sizeof(incomingEffect.potThreeName));
+  // memcpy(incomingPotNames, incomingEffect.potNames, sizeof(incomingEffect.potNames));
+  memcpy(incomingPotValues, incomingEffect.potValues, sizeof(incomingEffect.potValues));
+  memcpy(incomingPotNameLengths, incomingEffect.potNameLengths, sizeof(incomingEffect.potNameLengths));
+  incomingEffectNameLength = incomingEffect.effectNameLength;
 
   Serial.println("Incoming Data");
+  Serial.print("Effect Number: ");
+  Serial.println(incomingEffectNumber);
   Serial.print("Effect Name: ");
-  Serial.println(incomingReadings.effectName);
-  Serial.print("Effect Value: ");
-  Serial.println(incomingReadings.effectValue);
-  Serial.print("Effect Type: ");
-  Serial.println(incomingReadings.effectType);
+  Serial.println(incomingEffectName);
+  Serial.print("Effect Name Length: ");
+  Serial.println(incomingEffectNameLength);
+  Serial.print("Pot Names: ");
+  Serial.print(incomingPotOneName);
+  Serial.print(", ");
+  Serial.print(incomingPotTwoName);
+  Serial.print(", ");
+  Serial.print(incomingPotThreeName);
+  Serial.println();
+  Serial.print("Pot Values: ");
+  for (const byte b : incomingPotValues) {
+    Serial.print(b);
+    Serial.print(", ");
+  }
+  Serial.println();
+  Serial.print("Pot Name Lengths: ");
+  for (const byte b : incomingPotNameLengths) {
+    Serial.print(b);
+    Serial.print(", ");
+  }
+  Serial.println();
 
-  if (String(incomingReadings.effectType) == "EFFECT") {
-    selectEffect(String(incomingReadings.effectValue));
+  if(incomingEffectNumber != currentEffectNumber) {
+    // TO-DO
+    // read from ESP EEPROM
+    // store in some buffer
+    // write to the FV-1 EEPROM based on currentEEPROMSlot
+    // turn the incoming variables into current variables
+    // increment slot number
   }
-  else if (String(incomingReadings.effectType) == "PAGE") {
-    if (String(incomingReadings.effectName) == "PREV") {
-        Serial.println("PREVIOUS PAGE");
-    }
-    else if (String(incomingReadings.effectName) == "NEXT") {
-        Serial.println("NEXT PAGE");
-    }
-  }
-  else if (String(incomingReadings.effectType) == "POT") {
-    setPots(incomingReadings.effectValue, int(incomingReadings.effectName));
-  }
-  else if (String(incomingReadings.effectType) == "SWITCH") {
-    if (digitalRead(t0) == LOW) {
-      selectEffect("e");
-    }
-    else {
-      selectEffect("i");
-    }
-  }
-
-  if (String(incomingReadings.effectType) == "EFFECT") {
-    selectEffect(String(incomingReadings.effectValue));
-  }
-  else if (String(incomingReadings.effectType) == "SWITCH") {
-    
-    if(String(incomingReadings.effectName) == "POT"){
-      
-    }
-  } 
-  else if (String(incomingReadings.effectType) == "POT") {
-    setPots(incomingReadings.effectValue, int(incomingReadings.effectName));
-    // setPots(incomingReadings.effectValue, 128, 128);
+  else {
+    selectPassThrough();
   }
 }
 
@@ -181,7 +231,8 @@ void _callback(FtpOperation ftpOperation, unsigned int freeSpace, unsigned int t
     default:
       break;
   }
-};
+}
+
 void _transferCallback(FtpTransferOperation ftpOperation, const char* name, unsigned int transferredSize){
   switch (ftpOperation) {
     case FTP_UPLOAD_START:
@@ -214,19 +265,19 @@ void _transferCallback(FtpTransferOperation ftpOperation, const char* name, unsi
    * FTP_DOWNLOAD_ERROR = 5,
    * FTP_UPLOAD_ERROR = 5
    */
-};
+}
 
 void setup() {
   Serial.begin(115200);
   delay(10);
 
-  // Sets the device as a wifi station (could use WIFI_AP_STA if needed)
+  // Sets the device as a wifi station and access point
   WiFi.mode(WIFI_AP_STA);
   Serial.print("MAC Address: ");
   Serial.println(WiFi.macAddress());
 
   // Initialize the FTP server
-/*  WiFi.begin(ssid, password);
+  WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -238,6 +289,8 @@ void setup() {
   Serial.println(ssid);
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+  Serial.print("Wi-Fi Channel: ");
+  Serial.println(WiFi.channel());
 
   if (LITTLEFS.begin(true)) {
     ftpSrv.setCallback(_callback);
@@ -246,8 +299,6 @@ void setup() {
     Serial.println("LittleFS opened!");
     ftpSrv.begin("user","password");    //username, password for ftp.   (default 21, 50009 for PASV)
   }
-*/
-  //esp_wifi_set_channel(channel, WIFI_SECOND_CHAN_NONE);
 
   // Initialize ESP-NOW 
   if (esp_now_init() != ESP_OK) {
@@ -311,28 +362,10 @@ void setup() {
 
   int addr = 0; //first address
   delay(10);
-  
-    while (addr < 512) {
-      for (int program = 0; program < 8; program++) {
-        Serial.print(addr + program * 512);
-        Serial.print(":");
-       
-        Serial.print(i2c_eeprom_read_byte(FV1_EEPROM_ADDR, addr+program*512), HEX); 
-        Serial.print(" ");
-        Serial.print(i2c_eeprom_read_byte(FV1_EEPROM_ADDR, addr+program*512+1), HEX);
-        Serial.print(" ");
-        Serial.print(i2c_eeprom_read_byte(FV1_EEPROM_ADDR, addr+program*512+2), HEX);
-        Serial.print(" ");
-        Serial.print(i2c_eeprom_read_byte(FV1_EEPROM_ADDR, addr+program*512+3), HEX);
-        Serial.print("|  ");
-      }
-      addr+=4; 
-      Serial.println();
-      delay(10);
-  }
-  
 
-  // read_file_info("/effect0.h", ROM_00);
+  read_json("/profile.json");
+
+  //read_file_info("/effect0.h", ROM_00);
   /*read_file_info("/effect1.h", ROM_01);
   read_file_info("/effect2.h", ROM_02);
   read_file_info("/effect3.h", ROM_03);
@@ -340,34 +373,11 @@ void setup() {
   read_file_info("/effect5.h", ROM_05);
   read_file_info("/effect6.h", ROM_06);
   read_file_info("/effect7.h", ROM_07);*/
-
-  for (int program = 0; program<8; program++) {
-    Serial.print("Writing program ");
-    Serial.println(program);
-    for (int page=0; page<MAX_LENGTH; page+=16) {
-        // write 16 bytes at a time to not stress out Wire buffer
-        //Serial.print((int)prog_addr[program]);
-        //Serial.print(" ");  
-        //Serial.println(page+program*512);
-      i2c_eeprom_write_page(FV1_EEPROM_ADDR, page+program*512, prog_addr[program], page); // write to EEPROM 
-      delay(10); //add a small delay
-      toggleLED();
-    }
-  }
-  Serial.println("Memory written");
-  
 }
 
 void loop() {
-  /* if(readStringUntil(input, '\n'))
-  {
-    Serial.print("Final Input: ");
-    Serial.println(input);
-    input = "";
 
-    selectEffect(input);
-  } */
-  // ftpSrv.handleFTP();
+  ftpSrv.handleFTP();
 
   
   if (Serial.available() > 0)
@@ -380,11 +390,6 @@ void loop() {
   // sendReading();
   // delay(3000); 
   // toggleLED();
-}
-
-void getData() {
-  effectValue = effectCounter * 5;
-  effectCounter++;
 }
 
 bool readStringUntil(String& input, char end_char)
@@ -400,9 +405,15 @@ bool readStringUntil(String& input, char end_char)
   return false;
 }
 
-void toggleLED()
+void toggleLED(byte r, byte g, byte b)
 {
-  if (ledMode == 0)
+  // Red - (255,0,0)
+  // Green - (0,255,0)
+  // Blue - (0,0,255)
+  // White - (255,255,255)
+  
+  setLED(constrain(r, 0, 255), constrain(g, 0, 255), constrain(b, 0, 255));
+  /*if (ledMode == 0)
   {
     setLED(255,0,0); 
     ledMode = 1;   
@@ -421,7 +432,7 @@ void toggleLED()
   {
     setLED(255,255,255);
     ledMode = 0;
-  }
+  }*/
 }
 
 void setLED(int brightness_R, int brightness_G, int brightness_B)
@@ -432,14 +443,70 @@ void setLED(int brightness_R, int brightness_G, int brightness_B)
 }
 
 void sendReading() {
-  getData();
-  
-  strcpy(myReadings.effectName, effectName);
-  myReadings.effectValue = effectValue;
-  strcpy(myReadings.effectType, effectType);
+  //getData();
+  // strcpy(myReadings.effectName, effectName);
+  // myReadings.effectValue = effectValue;
+  // strcpy(myReadings.effectType, effectType);
+
+  currentEffect.effectNumber = currentEffectNumber;
+  memcpy(currentEffect.effectName, currentEffectName, sizeof(currentEffectName));
+  currentEffect.effectNameLength = currentEffectNameLength;
+  memcpy(currentEffect.potOneName, currentPotOneName, sizeof(currentPotOneName));
+  memcpy(currentEffect.potTwoName, currentPotTwoName, sizeof(currentPotTwoName));
+  memcpy(currentEffect.potThreeName, currentPotThreeName, sizeof(currentPotThreeName));
+  // memcpy(currentEffect.potNames, currentPotNames, sizeof(currentPotNames));
+  memcpy(currentEffect.potValues, currentPotValues, sizeof(currentPotValues));
+  memcpy(currentEffect.potNameLengths, currentPotNameLengths, sizeof(currentPotNameLengths));
+
+  Serial.print("Effect Number: ");
+  Serial.println(currentEffect.effectNumber);
+  Serial.print("Effect Name: ");
+  for(int i = 0; i < sizeof(currentEffect.effectName); i++) {
+    Serial.print(currentEffect.effectName[i]);
+  }
+  Serial.println();
+  Serial.print("Effect Name Length: ");
+  Serial.println(currentEffect.effectNameLength);
+  Serial.println();
+  Serial.println(currentEffect.effectName);
+  Serial.print("Pot Names: ");
+  for(int i = 0; i < sizeof(currentEffect.potOneName); i++) {
+    Serial.print(currentEffect.potOneName[i]);
+  }
+  Serial.print(", ");
+  for(int i = 0; i < sizeof(currentEffect.potTwoName); i++) {
+    Serial.print(currentEffect.potTwoName[i]);
+  }
+  Serial.print(", ");  
+  for(int i = 0; i < sizeof(currentEffect.potThreeName); i++) {
+    Serial.print(currentEffect.potThreeName[i]);
+  }
+  Serial.println();
+  Serial.print(currentEffect.potOneName);
+  Serial.print(sizeof(currentEffect.potOneName));
+  Serial.print(", ");
+  Serial.print(currentEffect.potTwoName);
+  Serial.print(sizeof(currentEffect.potTwoName));
+  Serial.print(", ");
+  Serial.print(currentEffect.potThreeName);
+  Serial.print(sizeof(currentEffect.potThreeName));
+  Serial.println();
+  Serial.print("Pot Values: ");
+  for (const byte b : currentEffect.potValues) {
+    Serial.print(b);
+    Serial.print(", ");
+  }
+  Serial.println();
+  Serial.print("Pot Name Lengths: ");
+  for (const byte b : currentEffect.potNameLengths) {
+    Serial.print(b);
+    Serial.print(", ");
+  }
+  Serial.println();
   
   // Send the data via ESP-NOW
-  esp_err_t result = esp_now_send(broadcastMACAddress, (uint8_t *) &myReadings, sizeof(myReadings));
+  esp_err_t result = esp_now_send(broadcastMACAddress, (uint8_t *) &currentEffect, sizeof(currentEffect));
+  //esp_err_t result = esp_now_send(broadcastMACAddress, (uint8_t *) &myReadings, sizeof(myReadings));
    
   if (result == ESP_OK) {
     Serial.println("Sent with success");
@@ -447,6 +514,16 @@ void sendReading() {
   else {
     Serial.println("Error sending the data");
   }
+}
+
+void selectPassThrough() {
+  Serial.println("SELECTING PASS THROUGH");
+  digitalWrite(t0, LOW);
+
+  byte passThroughEffectNumber = 5;
+  digitalWrite(s0, bitRead(passThroughEffectNumber, 0)); 
+  digitalWrite(s1, bitRead(passThroughEffectNumber, 1)); 
+  digitalWrite(s2, bitRead(passThroughEffectNumber, 2)); 
 }
 
 void selectEffect(String input)
@@ -476,15 +553,15 @@ void selectEffect(String input)
   }
   else
   {
-    int effectNumber = input.toInt();
+    int selectedEffectNumber = input.toInt();
     Serial.println("hit the else");
-    if (effectNumber >= 0 && effectNumber <= 7)
+    if (selectedEffectNumber >= 0 && selectedEffectNumber <= 7)
     {
       Serial.print("chosen effect #");
-      Serial.println(effectNumber);
-      digitalWrite(s0, bitRead(effectNumber, 0)); 
-      digitalWrite(s1, bitRead(effectNumber, 1)); 
-      digitalWrite(s2, bitRead(effectNumber, 2)); 
+      Serial.println(selectedEffectNumber);
+      digitalWrite(s0, bitRead(selectedEffectNumber, 0)); 
+      digitalWrite(s1, bitRead(selectedEffectNumber, 1)); 
+      digitalWrite(s2, bitRead(selectedEffectNumber, 2)); 
     }
   } 
 }
@@ -503,14 +580,176 @@ void setPots(int potValue, int potNum)
       break;
   }
 }
-/*
-void setPots(int pot0Value, int pot1Value, int pot2Value)
-{
-  dacWrite(pot0, constrain(pot0Value, 0, 255));
-  dacWrite(pot1, constrain(pot1Value, 0, 255));
-  ledcWrite(pot2Channel, constrain(pot2Value, 0, 255));
+
+void read_json(String path) {
+  bool jsonPath = LITTLEFS.exists(path);
+
+  if(jsonPath) {
+    Serial.println("JSON Exists");
+    File file = LITTLEFS.open(path, "r");
+    Serial.print("\nFile size: ");
+    const int fileSize = file.size();
+    Serial.println(fileSize);
+
+    Serial.print("Content inside file: \n");
+    unsigned char jsonContent[fileSize];
+    Serial.println(sizeof(jsonContent));
+
+    while (file.available()){
+      file.read(jsonContent, fileSize);
+      //Serial.print((char)file.read());
+    }
+    Serial.print("JSON: ");
+    for(int i = 0; i < fileSize; i++) {
+      Serial.print((char) jsonContent[i]);
+    }
+    Serial.println();
+    file.close();
+
+    DynamicJsonDocument jsonDocument(5000);
+    DeserializationError jsonParsed = deserializeJson(jsonDocument, jsonContent);
+
+    switch (jsonParsed.code()) {
+      case DeserializationError::Ok:
+          Serial.println(F("Deserialization succeeded"));
+          break;
+      case DeserializationError::InvalidInput:
+          Serial.println(F("Invalid input!"));
+          break;
+      case DeserializationError::NoMemory:
+          Serial.println(F("Not enough memory"));
+          break;
+      default:
+          Serial.println(F("Deserialization failed"));
+          break;
+    }
+    // Iterate through each effect page
+    for(int i = 0; i < jsonDocument.size(); i++) {
+      const char* pageName = jsonDocument[i]["name"];
+      JsonArray presets = jsonDocument[i]["presets"].as<JsonArray>();
+
+      // Iterate through each effect profile
+      for(int j = 0; j < presets.size(); j++) {
+        const char* fileName = presets[j]["file"];
+        char filePath[sizeof(fileName)+1];
+        strcpy(filePath, "/");
+        strcat(filePath, fileName);
+
+        // Check to see if that file exists
+        if (LITTLEFS.exists(filePath))
+        {
+          file = LITTLEFS.open(filePath, "r");
+          Serial.print("\nFile size: ");
+          const int fileSize = file.size();
+          Serial.println(fileSize);
+  
+          unsigned char effectContent[fileSize];
+  
+          int counter = 0;
+          while (file.available()){
+            file.read(effectContent, fileSize);
+            counter++;
+          }
+  
+          const int numChars = (int)(fileSize / 6);
+          byte parsedFile[numChars];
+          int hexCounter = 0;
+
+          Serial.print("FILE: ");
+          for(int k = 0; k <= fileSize-4; k++) {
+            if (((char) effectContent[k] == '0') && ((char) effectContent[k+1] == 'x')) {
+              const char a[] = {effectContent[k+2], effectContent[k+3]};
+              // Serial.print(a[0]);
+              // Serial.print(a[1]);
+              // Serial.print(" ");
+              // Serial.print(strtol(a, NULL, 16));
+              // Serial.print(" | ");
+              parsedFile[hexCounter] = strtol(a, NULL, 16);
+              hexCounter++;
+              k += 4;
+            }
+          }
+          
+          Serial.println();
+          Serial.print(hexCounter);
+          Serial.print("/");
+          Serial.print(numChars);
+          Serial.println();
+  
+          for(int k = 0; k < hexCounter; k++) {
+            Serial.print(parsedFile[k]);
+            Serial.print(" | ");
+          }
+          Serial.println();
+          
+  
+          // Write the byte array (parsedFile) to the ESP EEPROM
+          Serial.print("WRITING EFFECT #");
+          Serial.println(numEffectsLoaded);
+  
+          int numCycles = (int) ceil(hexCounter / 16.0);
+
+          if(numCycles == MAX_LENGTH / READ_LENGTH) {
+            for(int k = 0; k < numCycles; k++) {
+              i2c_eeprom_write_page(ESP_EEPROM_ADDR, (numEffectsLoaded*MAX_LENGTH)+(k*WRITE_LENGTH), parsedFile, k*WRITE_LENGTH);
+            }
+            delay(10);
+          }
+      
+          Serial.println();
+          Serial.println("READING: ");
+          byte fullReadBuffer[MAX_LENGTH];
+          for(int numCycles = 0; numCycles < MAX_LENGTH; numCycles += READ_LENGTH) {
+            byte readBuffer[READ_LENGTH];
+            i2c_eeprom_read_buffer(ESP_EEPROM_ADDR, numCycles+numEffectsLoaded*MAX_LENGTH, readBuffer, READ_LENGTH);
+
+            // memcpy(&fullReadBuffer[numCycles], readBuffer, sizeof(readBuffer));
+            for(byte b : readBuffer) {
+              Serial.print(b);
+              Serial.print("|");
+            }          
+          }
+
+          /*for (byte b : fullReadBuffer) {
+            Serial.print(b);
+            Serial.print("|");
+          }*/
+          
+          delay(10);
+          Serial.println();
+          Serial.println("---------------------------------");
+  
+          // TO-DO: add logic to cap at 127 effects
+
+          // const char* effectName = presets[j]["name"];
+          // const char* potNames[] = {presets[j]["pots"][0]["name"], presets[j]["pots"][1]["name"], presets[j]["pots"][2]["name"]};
+          // const byte potValues[] = {presets[j]["pots"][0]["value"], presets[j]["pots"][1]["value"], presets[j]["pots"][2]["value"]};
+
+          currentEffectNumber = numEffectsLoaded;
+          strcpy(currentEffectName, presets[j]["name"]);
+          currentEffectNameLength = presets[j]["length"];
+          strcpy(currentPotOneName, presets[j]["pots"][0]["name"]);
+          strcpy(currentPotTwoName, presets[j]["pots"][1]["name"]);
+          strcpy(currentPotThreeName, presets[j]["pots"][2]["name"]);
+          // const char* _currentPotNames[] = {presets[j]["pots"][0]["name"], presets[j]["pots"][1]["name"], presets[j]["pots"][2]["name"]};
+          const uint8_t _currentPotValues[] = {presets[j]["pots"][0]["value"], presets[j]["pots"][1]["value"], presets[j]["pots"][2]["value"]};
+          //memcpy(currentPotNames, _currentPotNames, sizeof(_currentPotNames));
+          memcpy(currentPotValues, _currentPotValues, sizeof(_currentPotValues));
+          const uint8_t _currentPotNameLengths[] = {presets[j]["pots"][0]["length"], presets[j]["pots"][1]["length"], presets[j]["pots"][2]["length"]};
+          memcpy(currentPotNameLengths, _currentPotNameLengths, sizeof(_currentPotNameLengths));
+
+          sendReading();
+
+          numEffectsLoaded++;
+        }
+      }
+    }
+  }
+  else {
+    Serial.print("JSON NOT FOUND: ");
+    Serial.println(path);
+  }
 }
-*/
 
 void read_file_info(String path, unsigned char *memory) {
   bool filePath = LITTLEFS.exists(path);
@@ -548,12 +787,18 @@ void i2c_eeprom_write_page( int deviceaddress, unsigned int eeaddresspage, byte*
     Wire.beginTransmission(deviceaddress);
     Wire.write((int)(eeaddresspage >> 8)); // MSB
     Wire.write((int)(eeaddresspage & 0xFF)); // LSB
+    /*Serial.print((int) (eeaddresspage >> 8));
+    Serial.print(" ");
+    Serial.print((int) (eeaddresspage & 0xFF));
+    Serial.print(" ");
+    Serial.println(page);*/
 
-    for ( int c = page; c < page+16; c++) {
-      //Serial.print("-->");
-      //Serial.println(pgm_read_byte_near(data+c));
+    for ( int c = page; c < page+WRITE_LENGTH; c++) {
+      Serial.print(pgm_read_byte_near(data+c));
+      Serial.print("|");
       Wire.write(pgm_read_byte_near(data+c));
     }
+    // Serial.println();
     Wire.endTransmission();
 }
 
@@ -567,6 +812,19 @@ byte i2c_eeprom_read_byte( int deviceaddress, unsigned int eeaddress ) {
     if (Wire.available()) rdata = Wire.read();
     return rdata;
 }
+
+void i2c_eeprom_read_buffer( int deviceaddress, unsigned int eeaddress, byte *buffer, int length ) {
+  Wire.beginTransmission(deviceaddress);
+  Wire.write((int)(eeaddress >> 8)); // MSB
+  Wire.write((int)(eeaddress & 0xFF)); // LSB
+  Wire.endTransmission();
+  Wire.requestFrom(deviceaddress, length);
+
+  for (int c = 0; c < length; c++ ) {
+    if (Wire.available()) buffer[c] = Wire.read();    
+  }
+}
+
 
 /*
 Write pot0 or pot1 with eg:
